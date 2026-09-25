@@ -23,14 +23,14 @@ export function JourneyTimeline({ stage }: { stage: Stage }) {
                 style={{ background: reached && index < reachedIndex ? 'var(--ink)' : 'var(--line-strong)' }}
               />
             )}
-            {/* Ink for reached steps, terracotta for where they are now. */}
+            {/* Ink for reached steps, the accent for where they are now. */}
             <span
               className={cn(
                 'relative z-10 grid h-[27px] w-[27px] shrink-0 place-items-center rounded-full border',
                 current
                   ? 'border-transparent bg-accent text-on-accent shadow-[0_0_0_4px_var(--accent-soft)]'
                   : reached
-                    ? 'border-transparent bg-ink text-[#f5f2ed]'
+                    ? 'border-transparent bg-ink text-on-ink'
                     : 'border-line-strong bg-surface-2 text-faint'
               )}
             >

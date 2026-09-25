@@ -3,7 +3,7 @@ import { cn } from '@/lib/format';
 type Variant = 'primary' | 'secondary' | 'ghost';
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-ink text-[#f5f2ed] shadow-glow hover:bg-[#2a2a27]',
+  primary: 'bg-ink text-on-ink shadow-glow hover:bg-ink-hover',
   secondary: 'border border-line-strong bg-white text-ink hover:border-ink/40',
   ghost: 'text-muted hover:bg-surface-2 hover:text-ink',
 };

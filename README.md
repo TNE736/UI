@@ -34,10 +34,12 @@ from his curated list (motion, recharts, sonner, NumberFlow, cmdk, Base UI).
 
 Plus a **Ctrl/⌘ K command menu** (search consultants, jump to pages).
 
-**Look:** a warm editorial theme — ivory canvas, ink text and a single
-terracotta accent; Fraunces serif headlines (with one italic accent word) over
-Inter body text; white cards with hairline borders; ink pill buttons. Colour is
-kept for meaning: one warm sand → terracotta → ink scale for pipeline stages.
+**Look:** "Forest and linen", an editorial theme: linen canvas, forest-ink
+text and a single forest-green accent; Fraunces serif headlines (with one
+italic accent word) over Inter body text; white cards with hairline borders;
+ink pill buttons. Colour is kept for meaning: one linen → sage → forest → ink
+scale for pipeline stages. Every colour is a token in `app/globals.css`, so a
+new palette is a one-file change.
 
 ## Running it
 

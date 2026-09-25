@@ -139,7 +139,7 @@ export default function ConsultantsPage() {
                 aria-pressed={dm === value}
                 className={cn(
                   'press rounded-full px-3.5 py-1.5 font-medium',
-                  dm === value ? 'bg-ink text-[#f5f2ed]' : 'text-muted hover:text-ink'
+                  dm === value ? 'bg-ink text-on-ink' : 'text-muted hover:text-ink'
                 )}
               >
                 {value === 'all' ? 'Everyone' : value === 'yes' ? 'Decision makers' : 'Not yet'}
@@ -265,7 +265,7 @@ function FilterChip({
       aria-pressed={active}
       className={cn(
         'press inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12.5px] font-medium transition-colors duration-150',
-        active ? 'border-ink bg-ink text-[#f5f2ed]' : 'border-line-strong bg-white text-muted hover:border-ink/40 hover:text-ink'
+        active ? 'border-ink bg-ink text-on-ink' : 'border-line-strong bg-white text-muted hover:border-ink/40 hover:text-ink'
       )}
     >
       {color && <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} aria-hidden />}

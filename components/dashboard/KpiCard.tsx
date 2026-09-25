@@ -20,7 +20,7 @@ export function KpiCard({ label, value, icon: Icon, share, caption, featured, su
     <div
       className={cn(
         'relative overflow-hidden rounded-[22px] p-6',
-        featured ? 'bg-ink text-[#f5f2ed] shadow-glow' : 'bg-surface text-ink shadow-card'
+        featured ? 'bg-ink text-on-ink shadow-glow' : 'bg-surface text-ink shadow-card'
       )}
     >
       {featured && (
@@ -31,7 +31,7 @@ export function KpiCard({ label, value, icon: Icon, share, caption, featured, su
         />
       )}
       <div className="relative flex items-center justify-between">
-        <p className={cn('text-[11px] font-semibold uppercase tracking-[0.16em]', featured ? 'text-[#d8d2c6]' : 'text-muted')}>
+        <p className={cn('text-[11px] font-semibold uppercase tracking-[0.16em]', featured ? 'text-on-ink-muted' : 'text-muted')}>
           {label}
         </p>
         <Icon className={cn('h-4 w-4', featured ? 'text-accent-2' : 'text-faint')} strokeWidth={1.75} />
@@ -44,7 +44,7 @@ export function KpiCard({ label, value, icon: Icon, share, caption, featured, su
           <AnimatedNumber value={value} suffix={suffix} />
         )}
       </div>
-      <p className={cn('relative mt-3 h-4 text-[13px]', featured ? 'text-[#bdb7ab]' : 'text-muted')}>{caption}</p>
+      <p className={cn('relative mt-3 h-4 text-[13px]', featured ? 'text-on-ink-faint' : 'text-muted')}>{caption}</p>
 
       {share !== undefined && (
         <div className={cn('relative mt-5 h-[3px] overflow-hidden rounded-full', featured ? 'bg-white/15' : 'bg-surface-3')}>

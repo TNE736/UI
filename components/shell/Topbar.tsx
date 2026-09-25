@@ -12,7 +12,7 @@ export function Topbar() {
   const current = findNav(usePathname());
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-[#faf9f5]/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 border-b border-line bg-topbar backdrop-blur-xl">
       <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
         <p className="min-w-0 flex-1 truncate text-[13px] font-medium text-muted">
           {current?.label ?? 'LeadOps Studio'}
@@ -47,7 +47,7 @@ export function Topbar() {
             href={href}
             className={cn(
               'press shrink-0 rounded-full px-3.5 py-1.5 text-[13px] font-medium',
-              current?.href === href ? 'bg-ink text-[#f5f2ed]' : 'text-muted'
+              current?.href === href ? 'bg-ink text-on-ink' : 'text-muted'
             )}
           >
             {label}

@@ -113,7 +113,7 @@ export default function UploadPage() {
           >
             <span
               className={cn(
-                'relative mb-4 grid h-14 w-14 place-items-center rounded-full bg-ink text-[#f5f2ed] shadow-glow',
+                'relative mb-4 grid h-14 w-14 place-items-center rounded-full bg-ink text-on-ink shadow-glow',
                 'transition-transform duration-200 ease-out',
                 dragging && 'scale-105'
               )}

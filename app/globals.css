@@ -1,34 +1,44 @@
 @import 'tailwindcss';
 
 /* ─────────────────────────── Tokens ───────────────────────────
- * Warm editorial theme: ivory canvas, ink text, ONE accent (terracotta).
+ * Forest and linen: linen canvas, forest ink, ONE accent (forest green).
  * Colour is used sparingly — structure comes from type, space and hairlines.
  * Components only ever use the Tailwind names mapped below.               */
 :root {
-  --bg: #faf9f5;
+  --bg: #f6f7f2;
   --surface: #ffffff;
-  --surface-2: #f5f3ec;
-  --surface-3: #ebe7dd;
-  --line: rgb(20 20 19 / 0.08);
-  --line-strong: rgb(20 20 19 / 0.14);
-  --ink: #141413;
-  --fg: #141413;
-  --muted: #5e5d57;
-  --faint: #9a978d;
+  --surface-2: #f0f2ea;
+  --surface-3: #e3e8dc;
+  --line: rgb(21 32 26 / 0.08);
+  --line-strong: rgb(21 32 26 / 0.14);
+  --ink: #15201a;
+  --ink-hover: #243229;
+  --fg: #15201a;
+  --muted: #56605a;
+  --faint: #929b93;
 
-  --accent: #b8553a;
-  --accent-2: #d97757;
-  --accent-soft: rgb(184 85 58 / 0.09);
-  --on-accent: #fffaf5;
+  --accent: #2f6b4f;
+  --accent-2: #86a98f;
+  --accent-soft: rgb(47 107 79 / 0.09);
+  --on-accent: #f1f5ee;
 
-  --success: #4a7c59;
-  --warning: #b7791f;
+  /* Text on ink surfaces (pills, active nav, the featured card). */
+  --on-ink: #f1f5ee;
+  --on-ink-muted: #cbd6cc;
+  --on-ink-faint: #a3b0a6;
+
+  --sidebar: rgb(239 242 233 / 0.8);
+  --topbar: rgb(246 247 242 / 0.8);
+  --chart-muted: #d3dccf;
+
+  --success: #3f7d4f;
+  --warning: #a86d12;
   --danger: #b42318;
   --info: #3f6c8f;
 
-  --shadow-card: 0 0 0 1px rgb(20 20 19 / 0.07) inset, 0 1px 2px rgb(20 20 19 / 0.03), 0 12px 32px -20px rgb(80 50 30 / 0.18);
-  --shadow-pop: 0 0 0 1px rgb(20 20 19 / 0.08), 0 24px 60px -24px rgb(60 40 20 / 0.35);
-  --glow: 0 10px 24px -12px rgb(20 20 19 / 0.45);
+  --shadow-card: 0 0 0 1px rgb(21 32 26 / 0.07) inset, 0 1px 2px rgb(21 32 26 / 0.03), 0 12px 32px -20px rgb(30 60 40 / 0.2);
+  --shadow-pop: 0 0 0 1px rgb(21 32 26 / 0.08), 0 24px 60px -24px rgb(25 50 35 / 0.35);
+  --glow: 0 10px 24px -12px rgb(21 32 26 / 0.45);
 }
 
 @theme inline {
@@ -43,6 +53,12 @@
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
   --color-ink: var(--ink);
+  --color-ink-hover: var(--ink-hover);
+  --color-on-ink: var(--on-ink);
+  --color-on-ink-muted: var(--on-ink-muted);
+  --color-on-ink-faint: var(--on-ink-faint);
+  --color-sidebar: var(--sidebar);
+  --color-topbar: var(--topbar);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-faint: var(--faint);
@@ -72,9 +88,9 @@ html {
 }
 
 body {
-  /* A single soft peach glow at the top, nothing more. */
+  /* A single soft sage glow at the top, nothing more. */
   background:
-    radial-gradient(1200px 420px at 50% -120px, rgb(240 164 136 / 0.22), transparent 70%),
+    radial-gradient(1200px 420px at 50% -120px, rgb(134 169 143 / 0.22), transparent 70%),
     var(--bg);
   background-attachment: fixed;
   color: var(--fg);

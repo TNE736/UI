@@ -92,7 +92,7 @@ function Journey() {
                   aria-current={p.id === selectedId ? 'true' : undefined}
                   className={cn(
                     'flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors duration-150',
-                    p.id === selectedId ? 'bg-ink text-[#f5f2ed] [&_*]:text-inherit' : 'hover:bg-surface-2'
+                    p.id === selectedId ? 'bg-ink text-on-ink [&_*]:text-inherit' : 'hover:bg-surface-2'
                   )}
                 >
                   <Avatar name={p.name} size={28} />

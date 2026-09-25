@@ -27,7 +27,7 @@ export default function InsightsPage() {
         eyebrow="Bench mix"
         title="Who is"
         accent="on the bench."
-        description="Technology, title, seniority and visa mix. Each bar splits decision makers (terracotta) from everyone else."
+        description="Technology, title, seniority and visa mix. Each bar splits decision makers (green) from everyone else."
       />
       {error && (
         <div className="mb-4">

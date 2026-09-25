@@ -50,11 +50,11 @@ interface Layer {
 }
 
 const LAYERS: Layer[] = [
-  // Top: a wide peach silk and a pale sand ribbon under it.
-  { d: wavePath({ baseline: 150, amplitude: 46, harmonic: 14, closeTo: 'top' }), fill: 'url(#wave-peach)', duration: 70 },
-  { d: wavePath({ baseline: 120, amplitude: 34, phase: 1.3, harmonic: 10, closeTo: 'top' }), fill: 'url(#wave-sand)', duration: 95, reverse: true },
-  // Bottom: terracotta haze and a lighter cream fold on top of it.
-  { d: wavePath({ baseline: 500, amplitude: 50, phase: 2.2, harmonic: 16, closeTo: 'bottom' }), fill: 'url(#wave-clay)', duration: 80, reverse: true },
+  // Top: a wide sage silk and a pale linen ribbon under it.
+  { d: wavePath({ baseline: 150, amplitude: 46, harmonic: 14, closeTo: 'top' }), fill: 'url(#wave-sage)', duration: 70 },
+  { d: wavePath({ baseline: 120, amplitude: 34, phase: 1.3, harmonic: 10, closeTo: 'top' }), fill: 'url(#wave-linen)', duration: 95, reverse: true },
+  // Bottom: a moss haze and a lighter linen fold on top of it.
+  { d: wavePath({ baseline: 500, amplitude: 50, phase: 2.2, harmonic: 16, closeTo: 'bottom' }), fill: 'url(#wave-moss)', duration: 80, reverse: true },
   { d: wavePath({ baseline: 540, amplitude: 36, phase: 0.6, harmonic: 12, closeTo: 'bottom' }), fill: 'url(#wave-cream)', duration: 60 },
   // Two fine highlight threads, like light catching fabric.
   { d: wavePath({ baseline: 168, amplitude: 44, phase: 0.2, harmonic: 14, closeTo: 'none' }), stroke: 'rgb(255 255 255 / 0.85)', strokeWidth: 1.5, duration: 70 },
@@ -67,21 +67,21 @@ export function Waves() {
       {/* Gradients defined once, shared by every layer. */}
       <svg width="0" height="0" className="absolute">
         <defs>
-          <linearGradient id="wave-peach" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#f0a488" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="#f6d3c2" stopOpacity="0.35" />
+          <linearGradient id="wave-sage" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#86a98f" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#cfe0d2" stopOpacity="0.35" />
           </linearGradient>
-          <linearGradient id="wave-sand" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#e7ded0" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#f3ede3" stopOpacity="0.6" />
+          <linearGradient id="wave-linen" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#e4e6da" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#f0f1e9" stopOpacity="0.6" />
           </linearGradient>
-          <linearGradient id="wave-clay" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stopColor="#d97757" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#f0c4ad" stopOpacity="0.3" />
+          <linearGradient id="wave-moss" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor="#5a9474" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#c6d9c9" stopOpacity="0.3" />
           </linearGradient>
           <linearGradient id="wave-cream" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stopColor="#efe6d8" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#f7f1e8" stopOpacity="0.7" />
+            <stop offset="0%" stopColor="#e9ecdf" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#f4f5ee" stopOpacity="0.7" />
           </linearGradient>
         </defs>
       </svg>

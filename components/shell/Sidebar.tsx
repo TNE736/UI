@@ -14,7 +14,7 @@ import { LiveBadge } from './LiveBadge';
 export function Sidebar() {
   const active = findNav(usePathname());
   return (
-    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-line bg-[#f6f4ee]/80 px-4 py-5 backdrop-blur-xl lg:flex">
+    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-line bg-sidebar px-4 py-5 backdrop-blur-xl lg:flex">
       <Link href="/" className="press mb-6 flex items-center gap-2.5 rounded-xl px-2 py-1.5">
         <span className="leading-tight">
           <span className="font-display block text-[21px] font-semibold text-ink">
@@ -35,7 +35,7 @@ export function Sidebar() {
               className={cn(
                 'press group relative flex items-center gap-3 rounded-full px-3.5 py-2 text-[13.5px] font-medium',
                 'transition-colors duration-150 ease-out',
-                isActive ? 'bg-ink text-[#f5f2ed]' : 'text-muted hover:bg-surface-3/70 hover:text-ink'
+                isActive ? 'bg-ink text-on-ink' : 'text-muted hover:bg-surface-3/70 hover:text-ink'
               )}
             >
               <Icon

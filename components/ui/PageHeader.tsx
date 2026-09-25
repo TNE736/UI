@@ -1,7 +1,7 @@
 interface PageHeaderProps {
   /** Words before the accent, e.g. "Pipeline". */
   title: string;
-  /** The one italic, terracotta word that ends the headline, e.g. "overview". */
+  /** The one italic, accent-coloured word that ends the headline, e.g. "overview". */
   accent?: string;
   eyebrow?: string;
   /** Section number shown before the eyebrow, e.g. "01". */
@@ -13,7 +13,7 @@ interface PageHeaderProps {
 
 /**
  * Editorial page header: a small numbered label with a hairline rule, a large
- * serif headline whose last word is set in italic terracotta, and a quiet
+ * serif headline whose last word is set in the italic accent colour, and a quiet
  * description. No colour blocks — the type carries it.
  */
 export function PageHeader({ title, accent, eyebrow, index, description, actions, children }: PageHeaderProps) {
@@ -48,6 +48,6 @@ export function PageHeader({ title, accent, eyebrow, index, description, actions
 
 /** Pill buttons, as links or buttons. Ink for the main action, outline for the rest. */
 export const pillPrimary =
-  'press inline-flex h-10 items-center gap-2 rounded-full bg-ink px-5 text-[13.5px] font-medium text-[#f5f2ed] shadow-glow transition-[background-color] duration-150 ease-out hover:bg-[#2a2a27] disabled:cursor-not-allowed disabled:opacity-45';
+  'press inline-flex h-10 items-center gap-2 rounded-full bg-ink px-5 text-[13.5px] font-medium text-on-ink shadow-glow transition-[background-color] duration-150 ease-out hover:bg-ink-hover disabled:cursor-not-allowed disabled:opacity-45';
 export const pillSecondary =
   'press inline-flex h-10 items-center gap-2 rounded-full border border-line-strong bg-white px-5 text-[13.5px] font-medium text-ink transition-[border-color] duration-150 ease-out hover:border-ink/40 disabled:cursor-not-allowed disabled:opacity-45';
