@@ -35,12 +35,12 @@ export function FunnelBars({ reached, total, showConversion }: FunnelBarsProps) 
                 <span className="ml-2 text-faint">{percent(count, total)}</span>
               </span>
             </div>
-            <div className="h-2.5 overflow-hidden rounded-full bg-surface-3">
+            <div className="h-2 overflow-hidden rounded-full bg-surface-3">
               <div
                 className="h-full origin-left rounded-full transition-transform duration-[250ms] ease-[var(--ease-out)]"
                 style={{
                   transform: `scaleX(${total ? count / total : 0})`,
-                  background: `linear-gradient(90deg, ${color}, color-mix(in oklab, ${color} 70%, white))`,
+                  background: color,
                 }}
               />
             </div>

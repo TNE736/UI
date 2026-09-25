@@ -1,6 +1,7 @@
 /**
  * bench-outreach's `qualification_stage` values (its consultant_fields.QualificationStage).
  * Progress stages run in order; closing stages end a consultant's journey early.
+ * Colours: one warm scale (sand → terracotta → ink) for progress; greys for closing.
  */
 export const PROGRESS_STAGES = [
   'loaded',
@@ -28,17 +29,17 @@ interface StageMeta {
 }
 
 export const STAGE_META: Record<Stage, StageMeta> = {
-  loaded: { label: 'Loaded', description: 'Saved to MongoDB from a CSV upload', color: '#7c6cff' },
-  emailed: { label: 'Emailed', description: 'Email Agent sent a matching role', color: '#3b82f6' },
-  engaged: { label: 'Engaged', description: 'Replied to the outreach email', color: '#06b6d4' },
-  researched: { label: 'Researched', description: 'Research done on the interested consultant', color: '#a855f7' },
-  followed_up: { label: 'Followed up', description: 'Qualifying follow-up sent', color: '#ec4899' },
-  qualified: { label: 'Qualified', description: 'Met the bar for the Bench TA team', color: '#10b981' },
-  handed_off: { label: 'Handed off', description: 'Handed to the Bench TA team', color: '#14b8a6' },
-  suppressed: { label: 'Suppressed', description: 'Opted out or suppressed', color: '#e0a33a' },
-  closed: { label: 'Closed', description: 'Closed without qualifying', color: '#64748b' },
-  invalid: { label: 'Invalid', description: 'Bad data — could not be worked', color: '#ef5b6e' },
-  referred: { label: 'Referred', description: 'Referred elsewhere', color: '#38bdf8' },
+  loaded: { label: 'Loaded', description: 'Saved to MongoDB from a CSV upload', color: '#c9bfad' },
+  emailed: { label: 'Emailed', description: 'Email Agent sent a matching role', color: '#e0a98d' },
+  engaged: { label: 'Engaged', description: 'Replied to the outreach email', color: '#d97757' },
+  researched: { label: 'Researched', description: 'Research done on the interested consultant', color: '#b8553a' },
+  followed_up: { label: 'Followed up', description: 'Qualifying follow-up sent', color: '#8c3f27' },
+  qualified: { label: 'Qualified', description: 'Met the bar for the Bench TA team', color: '#4a7c59' },
+  handed_off: { label: 'Handed off', description: 'Handed to the Bench TA team', color: '#141413' },
+  suppressed: { label: 'Suppressed', description: 'Opted out or suppressed', color: '#a8a397' },
+  closed: { label: 'Closed', description: 'Closed without qualifying', color: '#7a766c' },
+  invalid: { label: 'Invalid', description: 'Bad data — could not be worked', color: '#b42318' },
+  referred: { label: 'Referred', description: 'Referred elsewhere', color: '#5f6f78' },
 };
 
 export function isStage(value: unknown): value is Stage {

@@ -1,13 +1,19 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Fraunces, Inter } from 'next/font/google';
 import { Providers } from '@/components/providers/Providers';
 import { Sidebar } from '@/components/shell/Sidebar';
 import { Topbar } from '@/components/shell/Topbar';
 import { CommandMenu } from '@/components/shell/CommandMenu';
 import './globals.css';
 
-const geistSans = Geist({ subsets: ['latin'], variable: '--font-geist-sans' });
-const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+// Editorial serif for headlines and big figures; italic for the accent word.
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-fraunces',
+  style: ['normal', 'italic'],
+  axes: ['opsz'],
+});
 
 export const metadata: Metadata = {
   title: 'LeadOps Studio',
@@ -15,13 +21,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#f3f4fd',
+  themeColor: '#faf9f5',
   colorScheme: 'light',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
       <body className="font-sans">
         <Providers>
           <div className="flex min-h-dvh">

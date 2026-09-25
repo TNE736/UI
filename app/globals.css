@@ -1,46 +1,40 @@
 @import 'tailwindcss';
 
 /* ─────────────────────────── Tokens ───────────────────────────
- * One bright, vibrant theme. Components only ever use the Tailwind names
- * mapped below (bg-surface, text-muted, border-line, …).                  */
+ * Warm editorial theme: ivory canvas, ink text, ONE accent (terracotta).
+ * Colour is used sparingly — structure comes from type, space and hairlines.
+ * Components only ever use the Tailwind names mapped below.               */
 :root {
-  --bg: #f3f4fd;
+  --bg: #faf9f5;
   --surface: #ffffff;
-  --surface-2: #f5f6fd;
-  --surface-3: #eaecf8;
-  --line: rgb(40 44 110 / 0.08);
-  --line-strong: rgb(40 44 110 / 0.15);
-  --fg: #141735;
-  --muted: #555b80;
-  --faint: #8e94b5;
+  --surface-2: #f5f3ec;
+  --surface-3: #ebe7dd;
+  --line: rgb(20 20 19 / 0.08);
+  --line-strong: rgb(20 20 19 / 0.14);
+  --ink: #141413;
+  --fg: #141413;
+  --muted: #5e5d57;
+  --faint: #9a978d;
 
-  --accent: #6c47ff;
-  --accent-2: #3d7bff;
-  --accent-soft: rgb(108 71 255 / 0.1);
-  --on-accent: #ffffff;
+  --accent: #b8553a;
+  --accent-2: #d97757;
+  --accent-soft: rgb(184 85 58 / 0.09);
+  --on-accent: #fffaf5;
 
-  --success: #0ea371;
-  --warning: #d9820b;
-  --danger: #e2334d;
-  --info: #2f7cf6;
+  --success: #4a7c59;
+  --warning: #b7791f;
+  --danger: #b42318;
+  --info: #3f6c8f;
 
-  /* Brand gradients — violet → blue is the spine; the others are its family. */
-  --grad-brand: linear-gradient(120deg, #7b4dff 0%, #5a5cff 45%, #2f8cff 100%);
-  --grad-violet: linear-gradient(135deg, #8b5cf6, #6d28d9);
-  --grad-blue: linear-gradient(135deg, #3b82f6, #4f46e5);
-  --grad-pink: linear-gradient(135deg, #ec4899, #a855f7);
-  --grad-teal: linear-gradient(135deg, #14b8a6, #0ea5e9);
-  --grad-amber: linear-gradient(135deg, #f59e0b, #f43f5e);
-
-  --shadow-card: 0 1px 2px rgb(40 44 110 / 0.04), 0 10px 30px -14px rgb(60 50 180 / 0.18);
-  --shadow-pop: 0 24px 60px -20px rgb(50 40 160 / 0.35), 0 2px 8px rgb(40 44 110 / 0.08);
-  --glow: 0 10px 30px -10px rgb(108 71 255 / 0.55);
-  --grid-dot: rgb(60 64 140 / 0.07);
+  --shadow-card: 0 0 0 1px rgb(20 20 19 / 0.07) inset, 0 1px 2px rgb(20 20 19 / 0.03), 0 12px 32px -20px rgb(80 50 30 / 0.18);
+  --shadow-pop: 0 0 0 1px rgb(20 20 19 / 0.08), 0 24px 60px -24px rgb(60 40 20 / 0.35);
+  --glow: 0 10px 24px -12px rgb(20 20 19 / 0.45);
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -48,6 +42,7 @@
   --color-surface-3: var(--surface-3);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-faint: var(--faint);
@@ -77,14 +72,12 @@ html {
 }
 
 body {
+  /* A single soft peach glow at the top, nothing more. */
   background:
-    radial-gradient(1000px 520px at 0% 0%, rgb(139 92 246 / 0.16), transparent 60%),
-    radial-gradient(900px 500px at 100% 0%, rgb(59 130 246 / 0.14), transparent 60%),
-    radial-gradient(900px 600px at 80% 100%, rgb(236 72 153 / 0.1), transparent 60%),
+    radial-gradient(1200px 420px at 50% -120px, rgb(240 164 136 / 0.22), transparent 70%),
     var(--bg);
   background-attachment: fixed;
   color: var(--fg);
-  font-feature-settings: 'cv11', 'ss01';
   -webkit-font-smoothing: antialiased;
 }
 
@@ -92,17 +85,23 @@ body {
   background: var(--accent-soft);
 }
 
-/* Decorative light blobs inside gradient banners and KPI cards. */
-.hero-orb {
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(40px);
-  pointer-events: none;
+/* Display headlines: Fraunces, tight tracking, optical sizing. */
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.025em;
 }
-.hero-dots {
-  background-image: radial-gradient(rgb(255 255 255 / 0.22) 1px, transparent 1px);
-  background-size: 18px 18px;
-  mask-image: linear-gradient(90deg, transparent, black 60%);
+
+/* Small uppercase label with a hairline rule, used above sections. */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
 /* ─────────────────────────── Motion utilities ───────────────────────────
@@ -157,12 +156,6 @@ body {
   border-radius: 999px;
   background: currentColor;
   animation: pulse-ring 1.8s var(--ease-out) infinite;
-}
-
-/* Subtle dotted canvas behind the app. */
-.canvas-grid {
-  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
-  background-size: 22px 22px;
 }
 
 /* Scrollbars that don't shout. */

@@ -36,8 +36,8 @@ export function BreakdownChart({ rows, height }: { rows: BreakdownRow[]; height?
           />
           <Tooltip content={<ChartTooltip />} cursor={{ fill: 'var(--surface-2)' }} />
           {/* A short, one-time draw: this is data people read, not decoration. */}
-          <Bar dataKey="Others" stackId="a" fill="var(--accent)" radius={[4, 0, 0, 4]} animationDuration={350} animationEasing="ease-out" />
-          <Bar dataKey="Decision makers" stackId="a" fill="var(--success)" radius={[0, 4, 4, 0]} animationDuration={350} animationEasing="ease-out" />
+          <Bar dataKey="Others" stackId="a" fill="#d9d2c4" radius={[4, 0, 0, 4]} animationDuration={350} animationEasing="ease-out" />
+          <Bar dataKey="Decision makers" stackId="a" fill="var(--accent)" radius={[0, 4, 4, 0]} animationDuration={350} animationEasing="ease-out" />
         </BarChart>
       </ResponsiveContainer>
     </div>

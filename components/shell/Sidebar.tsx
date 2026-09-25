@@ -14,14 +14,13 @@ import { LiveBadge } from './LiveBadge';
 export function Sidebar() {
   const active = findNav(usePathname());
   return (
-    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-white/60 bg-white/70 px-3 py-4 shadow-[8px_0_30px_-24px_rgb(60_50_180_/_0.35)] backdrop-blur-xl lg:flex">
+    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-line bg-[#f6f4ee]/80 px-4 py-5 backdrop-blur-xl lg:flex">
       <Link href="/" className="press mb-6 flex items-center gap-2.5 rounded-xl px-2 py-1.5">
-        <span className="grid h-9 w-9 place-items-center rounded-xl text-sm font-bold text-white shadow-glow" style={{ background: 'var(--grad-brand)' }}>
-          L
-        </span>
         <span className="leading-tight">
-          <span className="block text-[14px] font-semibold tracking-tight">LeadOps Studio</span>
-          <span className="block text-[11px] text-faint">Consultant pipeline</span>
+          <span className="font-display block text-[21px] font-semibold text-ink">
+            LeadOps<span className="text-accent">.</span>
+          </span>
+          <span className="block text-[10.5px] font-semibold uppercase tracking-[0.18em] text-faint">Studio</span>
         </span>
       </Link>
 
@@ -34,16 +33,14 @@ export function Sidebar() {
               href={href}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'press group relative flex items-center gap-3 rounded-xl px-3 py-2 text-[13.5px] font-medium',
+                'press group relative flex items-center gap-3 rounded-full px-3.5 py-2 text-[13.5px] font-medium',
                 'transition-colors duration-150 ease-out',
-                isActive
-                  ? 'text-white shadow-[0_8px_20px_-8px_rgb(92_70_255_/_0.7)]'
-                  : 'text-muted hover:bg-accent-soft hover:text-fg'
+                isActive ? 'bg-ink text-[#f5f2ed]' : 'text-muted hover:bg-surface-3/70 hover:text-ink'
               )}
-              style={isActive ? { background: 'var(--grad-brand)' } : undefined}
             >
               <Icon
-                className={cn('h-[17px] w-[17px]', isActive ? 'text-white' : 'text-faint group-hover:text-accent')}
+                strokeWidth={1.75}
+                className={cn('h-[17px] w-[17px]', isActive ? 'text-accent-2' : 'text-faint group-hover:text-ink')}
               />
               {label}
             </Link>
@@ -56,7 +53,7 @@ export function Sidebar() {
           href="http://localhost:3000"
           target="_blank"
           rel="noreferrer"
-          className="press flex items-center justify-between rounded-xl border border-line bg-white px-3 py-2 text-[12.5px] text-muted transition-colors duration-150 hover:border-accent/40 hover:text-accent"
+          className="press flex items-center justify-between rounded-full border border-line-strong bg-white px-4 py-2 text-[12.5px] text-muted transition-colors duration-150 hover:border-ink/40 hover:text-ink"
         >
           Classic dashboard
           <ArrowUpRight className="h-3.5 w-3.5" />

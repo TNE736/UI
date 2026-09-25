@@ -82,10 +82,10 @@ export default function UploadPage() {
   return (
     <>
       <PageHeader
-        tone="sunset"
-        icon={UploadCloud}
+        index="02"
         eyebrow="Ingestion"
-        title="Upload consultants"
+        title="Upload"
+        accent="consultants."
         description="Drop a consultant CSV. New people are saved to MongoDB as “loaded”; anyone already there is skipped, never overwritten."
       />
 
@@ -106,26 +106,21 @@ export default function UploadPage() {
               addFiles(event.dataTransfer.files);
             }}
             className={cn(
-              'rise group relative flex w-full flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed px-6 py-14 text-center',
+              'rise group relative flex w-full flex-col items-center justify-center overflow-hidden rounded-[22px] border border-dashed px-6 py-16 text-center',
               'transition-[border-color,background-color] duration-200 ease-out',
-              dragging ? 'border-accent bg-accent-soft' : 'border-line-strong bg-surface hover:border-accent/60'
+              dragging ? 'border-accent bg-accent-soft' : 'border-line-strong bg-surface hover:border-ink/40'
             )}
           >
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-60"
-              style={{ background: 'radial-gradient(600px 200px at 50% 0%, var(--accent-soft), transparent 70%)' }}
-            />
             <span
               className={cn(
-                'relative mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-accent to-accent-2 text-on-accent shadow-glow',
+                'relative mb-4 grid h-14 w-14 place-items-center rounded-full bg-ink text-[#f5f2ed] shadow-glow',
                 'transition-transform duration-200 ease-out',
                 dragging && 'scale-105'
               )}
             >
               <UploadCloud className="h-6 w-6" />
             </span>
-            <span className="relative text-[15px] font-semibold text-fg">
+            <span className="font-display relative text-[22px] font-semibold text-ink">
               {dragging ? 'Drop to add' : 'Drop CSV files here, or click to browse'}
             </span>
             <span className="relative mt-1 text-[13px] text-muted">CSV only · up to 15 MB · checked in your browser first</span>

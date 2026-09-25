@@ -31,9 +31,12 @@ from his curated list (motion, recharts, sonner, NumberFlow, cmdk, Base UI).
 | **Journey** `/journey` | Any consultant's path through the seven stages, linkable (`/journey?id=…`) |
 | **Insights** `/insights` | Technology, title, seniority and visa breakdowns, split by decision makers |
 
-Plus a **Ctrl/⌘ K command menu** (search consultants, jump to pages). The look
-is one bright, vibrant theme: a soft violet-blue gradient canvas, a gradient
-hero banner per page and gradient KPI cards.
+Plus a **Ctrl/⌘ K command menu** (search consultants, jump to pages).
+
+**Look:** a warm editorial theme — ivory canvas, ink text and a single
+terracotta accent; Fraunces serif headlines (with one italic accent word) over
+Inter body text; white cards with hairline borders; ink pill buttons. Colour is
+kept for meaning: one warm sand → terracotta → ink scale for pipeline stages.
 
 ## Running it
 
@@ -79,7 +82,7 @@ app/
   page.tsx               Overview
   upload/ consultants/ funnel/ journey/ insights/   the other pages
   api/                   read-only routes: overview, consultants, breakdowns
-  globals.css            bright theme tokens, gradients, easing curves, motion utilities
+  globals.css            editorial theme tokens, typography, easing curves, motion utilities
 components/
   shell/                 sidebar, top bar, command menu, theme toggle, live badge
   dashboard/             KPI card, funnel bars, stage donut, activity feed

@@ -41,7 +41,7 @@ export function StageDonut({ byStage, total }: { byStage: Record<Stage, number>;
         </ResponsiveContainer>
         <div className="pointer-events-none absolute inset-0 grid place-items-center text-center">
           <div>
-            <p className="text-[26px] font-semibold leading-none tracking-tight">
+            <p className="font-display text-[34px] font-semibold leading-none">
               <AnimatedNumber value={total} />
             </p>
             <p className="mt-1 text-[11px] uppercase tracking-[0.12em] text-faint">total</p>

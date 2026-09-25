@@ -2,11 +2,11 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Activity, ArrowRight, BadgeCheck, MailCheck, UploadCloud, UserCheck, Users } from 'lucide-react';
+import { ArrowRight, BadgeCheck, MailCheck, UploadCloud, UserCheck, Users } from 'lucide-react';
 import type { Breakdowns, Consultant, Overview } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
 import { percent, relativeTime } from '@/lib/format';
-import { PageHeader, heroButtonClass } from '@/components/ui/PageHeader';
+import { PageHeader, pillPrimary } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
 import { ErrorBanner } from '@/components/ui/States';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -28,10 +28,10 @@ export default function OverviewPage() {
   return (
     <>
       <PageHeader
-        tone="brand"
-        icon={Activity}
+        index="01"
         eyebrow="Live pipeline"
-        title="Pipeline overview"
+        title="Pipeline"
+        accent="overview."
         description={
           data ? (
             <>
@@ -42,7 +42,7 @@ export default function OverviewPage() {
           )
         }
         actions={
-          <Link href="/upload" className={heroButtonClass}>
+          <Link href="/upload" className={pillPrimary}>
             <UploadCloud className="h-4 w-4" /> Upload CSV
           </Link>
         }
@@ -56,12 +56,11 @@ export default function OverviewPage() {
 
       {/* KPI row — staggered 40 ms apart on first paint only. */}
       <div className="stagger grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Consultants" value={data ? total : null} icon={Users} gradient="var(--grad-violet)" caption="Everyone in the pipeline" />
+        <KpiCard featured label="Consultants" value={data ? total : null} icon={Users} caption="Everyone in the pipeline" />
         <KpiCard
           label="Decision makers"
           value={data?.decisionMakers ?? null}
           icon={UserCheck}
-          gradient="var(--grad-blue)"
           share={total ? (data?.decisionMakers ?? 0) / total : 0}
           caption={data ? `${percent(data.decisionMakers, total)} approved for outreach` : undefined}
         />
@@ -69,7 +68,6 @@ export default function OverviewPage() {
           label="Emailed"
           value={data?.reached.emailed ?? null}
           icon={MailCheck}
-          gradient="var(--grad-pink)"
           share={total ? (data?.reached.emailed ?? 0) / total : 0}
           caption={data ? `${percent(data.reached.emailed ?? 0, total)} reached by email` : undefined}
         />
@@ -77,7 +75,6 @@ export default function OverviewPage() {
           label="Qualified"
           value={data?.reached.qualified ?? null}
           icon={BadgeCheck}
-          gradient="var(--grad-teal)"
           share={total ? (data?.reached.qualified ?? 0) / total : 0}
           caption={data ? `${percent(data.reached.qualified ?? 0, total, 1)} conversion` : undefined}
         />
@@ -165,9 +162,9 @@ function TopList({ rows, total }: { rows: { label: string; count: number }[]; to
               {row.count} <span className="text-faint">{percent(row.count, total)}</span>
             </span>
           </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-surface-3">
+          <div className="h-[3px] overflow-hidden rounded-full bg-surface-3">
             <div
-              className="h-full origin-left rounded-full bg-gradient-to-r from-accent to-accent-2 transition-transform duration-[250ms] ease-out"
+              className="h-full origin-left rounded-full bg-accent transition-transform duration-[250ms] ease-out"
               style={{ transform: `scaleX(${row.count / max})` }}
             />
           </div>

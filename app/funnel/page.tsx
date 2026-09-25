@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDown, Filter, Mail, TrendingDown, Trophy, UserCheck } from 'lucide-react';
+import { ArrowDown, Mail, TrendingDown, Trophy, UserCheck } from 'lucide-react';
 import type { Overview } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
 import { CLOSING_STAGES, PROGRESS_STAGES, STAGE_META } from '@/lib/stages';
@@ -32,10 +32,10 @@ export default function FunnelPage() {
   return (
     <>
       <PageHeader
-        tone="violet"
-        icon={Filter}
+        index="04"
         eyebrow="Conversion"
-        title="Conversion funnel"
+        title="Where people"
+        accent="drop off."
         description="Each bar counts consultants who reached that stage or went further. Arrows show how many continued from the stage before."
       />
       {error && (
@@ -94,7 +94,7 @@ export default function FunnelPage() {
                           className="absolute inset-y-0 left-0 right-0 origin-center rounded-xl transition-transform duration-[250ms] ease-out"
                           style={{
                             transform: `scaleX(${Math.max(share, count ? 0.02 : 0)})`,
-                            background: `linear-gradient(90deg, color-mix(in oklab, ${color} 75%, transparent), ${color}, color-mix(in oklab, ${color} 75%, transparent))`,
+                            background: color,
                           }}
                         />
                       </div>
@@ -163,15 +163,13 @@ function Stat({
 }) {
   const ready = value !== undefined || text !== undefined;
   return (
-    <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-card backdrop-blur">
-      <p className="flex items-center gap-2.5 text-[12.5px] font-medium text-muted">
-        <span className="grid h-8 w-8 place-items-center rounded-lg text-white shadow-glow" style={{ background: 'var(--grad-brand)' }}>
-          <Icon className="h-4 w-4" />
-        </span>
+    <div className="rounded-[22px] bg-surface p-6 shadow-card">
+      <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
+        <Icon className="h-4 w-4 text-accent" />
         {label}
       </p>
-      <div className="mt-3 min-h-9 text-[26px] font-semibold leading-tight tracking-tight text-fg">
-        {!ready ? <Skeleton className="h-8 w-24" /> : text !== undefined ? <span className="text-[17px]">{text}</span> : <AnimatedNumber value={value!} suffix={suffix} />}
+      <div className="font-display mt-4 min-h-10 text-[36px] font-semibold leading-none text-ink">
+        {!ready ? <Skeleton className="h-8 w-24" /> : text !== undefined ? <span className="text-[21px]">{text}</span> : <AnimatedNumber value={value!} suffix={suffix} />}
       </div>
       <p className="mt-1 h-4 text-[12px] text-faint">{hint || ''}</p>
     </div>

@@ -14,22 +14,22 @@ export function Card({ title, eyebrow, description, actions, flush, className, c
   const hasHeader = title || eyebrow || description || actions;
   return (
     <section
-      className={cn('relative rounded-2xl border border-white/80 bg-white/90 shadow-card backdrop-blur', className)}
+      className={cn('relative rounded-[22px] bg-surface shadow-card', className)}
       {...rest}
     >
       {hasHeader && (
-        <header className="flex items-start justify-between gap-4 px-5 pt-5">
+        <header className="flex items-start justify-between gap-4 px-6 pt-6">
           <div className="min-w-0">
             {eyebrow && (
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">{eyebrow}</p>
+              <p className="eyebrow">{eyebrow}</p>
             )}
-            {title && <h2 className="mt-1 text-[15px] font-semibold tracking-tight text-fg">{title}</h2>}
+            {title && <h2 className="font-display mt-1.5 text-[21px] font-semibold leading-tight text-ink">{title}</h2>}
             {description && <p className="mt-1 text-[13px] text-muted">{description}</p>}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </header>
       )}
-      <div className={cn(!flush && 'p-5', flush && hasHeader && 'mt-4')}>{children}</div>
+      <div className={cn(!flush && 'p-6', flush && hasHeader && 'mt-5')}>{children}</div>
     </section>
   );
 }

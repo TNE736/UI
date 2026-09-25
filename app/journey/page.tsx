@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { GitCommitHorizontal, Search, UserRound } from 'lucide-react';
+import { Search, UserRound } from 'lucide-react';
 import type { ConsultantPage } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
 import { PROGRESS_STAGES, STAGE_META, isClosing, progressIndex } from '@/lib/stages';
@@ -54,7 +54,7 @@ function Journey() {
 
   return (
     <>
-      <PageHeader tone="teal" icon={GitCommitHorizontal} eyebrow="Trace" title="Consultant journey" description="Pick anyone to see how far they’ve come: loaded → emailed → engaged → researched → followed up → qualified → handed off." />
+      <PageHeader index="05" eyebrow="Trace" title="One consultant,"  accent="end to end." description="Pick anyone to see how far they’ve come: loaded → emailed → engaged → researched → followed up → qualified → handed off." />
       {error && (
         <div className="mb-4">
           <ErrorBanner message={error} />
@@ -92,7 +92,7 @@ function Journey() {
                   aria-current={p.id === selectedId ? 'true' : undefined}
                   className={cn(
                     'flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors duration-150',
-                    p.id === selectedId ? 'bg-accent-soft' : 'hover:bg-surface-2'
+                    p.id === selectedId ? 'bg-ink text-[#f5f2ed] [&_*]:text-inherit' : 'hover:bg-surface-2'
                   )}
                 >
                   <Avatar name={p.name} size={28} />
@@ -120,7 +120,7 @@ function Journey() {
               <div className="flex flex-wrap items-center gap-4">
                 <Avatar name={person.name} size={52} />
                 <div className="min-w-0 flex-1">
-                  <h2 className="truncate text-[20px] font-semibold tracking-tight">{person.name}</h2>
+                  <h2 className="font-display truncate text-[28px] font-semibold leading-tight text-ink">{person.name}</h2>
                   <p className="truncate text-[13px] text-muted">
                     {[person.title, person.technology, person.visaStatus].filter(Boolean).join(' · ') || person.email}
                   </p>
@@ -135,7 +135,7 @@ function Journey() {
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-surface-3">
                   <div
-                    className="h-full origin-left rounded-full bg-gradient-to-r from-accent to-accent-2 transition-transform duration-[250ms] ease-out"
+                    className="h-full origin-left rounded-full bg-accent transition-transform duration-[250ms] ease-out"
                     style={{ transform: `scaleX(${progress})` }}
                   />
                 </div>

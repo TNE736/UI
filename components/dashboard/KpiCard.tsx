@@ -1,44 +1,56 @@
 import type { LucideIcon } from 'lucide-react';
 import { AnimatedNumber } from '@/components/ui/Number';
+import { cn } from '@/lib/format';
 
 interface KpiCardProps {
   label: string;
   value: number | null;
   icon: LucideIcon;
-  /** CSS gradient for the card background (use the --grad-* tokens). */
-  gradient: string;
-  /** 0–1: fills the bar at the bottom of the card. */
+  /** 0–1: fills the hairline bar at the bottom of the card. */
   share?: number;
   caption?: string;
+  /** The headline figure: ink card with light text. Use once per row. */
+  featured?: boolean;
+  suffix?: string;
 }
 
-/** A vivid gradient card with a rolling number (NumberFlow) and a progress bar. */
-export function KpiCard({ label, value, icon: Icon, gradient, share, caption }: KpiCardProps) {
+/** Editorial figure card: small caps label, large serif number (rolls with NumberFlow). */
+export function KpiCard({ label, value, icon: Icon, share, caption, featured, suffix }: KpiCardProps) {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl p-5 text-white shadow-[0_18px_40px_-20px_rgb(60_40_180_/_0.55)]"
-      style={{ background: gradient }}
+      className={cn(
+        'relative overflow-hidden rounded-[22px] p-6',
+        featured ? 'bg-ink text-[#f5f2ed] shadow-glow' : 'bg-surface text-ink shadow-card'
+      )}
     >
-      <span aria-hidden className="hero-orb -right-10 -top-12 h-36 w-36 bg-white opacity-25" />
-      <span aria-hidden className="hero-dots pointer-events-none absolute inset-0 opacity-60" />
-
+      {featured && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full opacity-40 blur-3xl"
+          style={{ background: 'var(--accent-2)' }}
+        />
+      )}
       <div className="relative flex items-center justify-between">
-        <p className="text-[13px] font-medium text-white/85">{label}</p>
-        <span className="grid h-9 w-9 place-items-center rounded-xl bg-white/20 ring-1 ring-white/30 backdrop-blur">
-          <Icon className="h-[18px] w-[18px]" />
-        </span>
+        <p className={cn('text-[11px] font-semibold uppercase tracking-[0.16em]', featured ? 'text-[#d8d2c6]' : 'text-muted')}>
+          {label}
+        </p>
+        <Icon className={cn('h-4 w-4', featured ? 'text-accent-2' : 'text-faint')} strokeWidth={1.75} />
       </div>
 
-      <div className="relative mt-3 h-10 text-[38px] font-semibold leading-none tracking-[-0.03em]">
-        {value === null ? <span className="block h-9 w-20 animate-pulse rounded-lg bg-white/25" /> : <AnimatedNumber value={value} />}
+      <div className="font-display relative mt-5 min-h-[56px] text-[52px] font-semibold leading-[1.08]">
+        {value === null ? (
+          <span className={cn('block h-11 w-24 animate-pulse rounded-lg', featured ? 'bg-white/10' : 'bg-surface-3')} />
+        ) : (
+          <AnimatedNumber value={value} suffix={suffix} />
+        )}
       </div>
-      <p className="relative mt-2 h-4 text-[12.5px] text-white/80">{caption}</p>
+      <p className={cn('relative mt-3 h-4 text-[13px]', featured ? 'text-[#bdb7ab]' : 'text-muted')}>{caption}</p>
 
       {share !== undefined && (
-        <div className="relative mt-4 h-1.5 overflow-hidden rounded-full bg-white/25">
+        <div className={cn('relative mt-5 h-[3px] overflow-hidden rounded-full', featured ? 'bg-white/15' : 'bg-surface-3')}>
           {/* transform, not width: GPU-only, retargets smoothly when data changes. */}
           <div
-            className="h-full origin-left rounded-full bg-white shadow-[0_0_12px_rgb(255_255_255_/_0.8)] transition-transform duration-[250ms] ease-out"
+            className="h-full origin-left rounded-full bg-accent transition-transform duration-[250ms] ease-out"
             style={{ transform: `scaleX(${Math.min(Math.max(share, 0), 1)})` }}
           />
         </div>

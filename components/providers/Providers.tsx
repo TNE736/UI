@@ -12,7 +12,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         position="bottom-right"
         richColors
         closeButton
-        toastOptions={{ style: { fontFamily: 'var(--font-geist-sans)' } }}
+        toastOptions={{ style: { fontFamily: 'var(--font-inter)' } }}
       />
     </LiveProvider>
   );

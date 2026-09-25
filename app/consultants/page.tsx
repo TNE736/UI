@@ -6,7 +6,7 @@ import type { Consultant, ConsultantPage } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
 import { ALL_STAGES, STAGE_META, type Stage } from '@/lib/stages';
 import { cn, relativeTime } from '@/lib/format';
-import { PageHeader, heroButtonClass } from '@/components/ui/PageHeader';
+import { PageHeader, pillSecondary } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { StagePill } from '@/components/ui/StagePill';
@@ -86,13 +86,13 @@ export default function ConsultantsPage() {
   return (
     <>
       <PageHeader
-        tone="ocean"
-        icon={Users}
+        index="03"
         eyebrow="Directory"
-        title="Consultants"
+        title="Every"
+        accent="consultant."
         description={data ? `${data.total} match${data.total === 1 ? '' : 'es'}` : 'Everyone in the pipeline, searchable.'}
         actions={
-          <button type="button" className={`${heroButtonClass} disabled:opacity-60`} onClick={exportCsv} disabled={!data?.total}>
+          <button type="button" className={pillSecondary} onClick={exportCsv} disabled={!data?.total}>
             <Download className="h-4 w-4" /> Export CSV
           </button>
         }
@@ -115,7 +115,7 @@ export default function ConsultantsPage() {
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search name, email, technology, title…"
               aria-label="Search consultants"
-              className="h-10 w-full rounded-xl border border-line bg-surface-2 pl-9 pr-3 text-[14px] text-fg outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-faint focus:border-accent/60 focus:shadow-[0_0_0_3px_var(--accent-soft)] sm:text-[13.5px]"
+              className="h-10 w-full rounded-full border border-line-strong bg-white pl-9 pr-4 text-[14px] text-fg outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-faint focus:border-accent/60 focus:shadow-[0_0_0_3px_var(--accent-soft)] sm:text-[13.5px]"
             />
           </label>
 
@@ -130,7 +130,7 @@ export default function ConsultantsPage() {
             ))}
           </div>
 
-          <div className="flex shrink-0 rounded-xl border border-line bg-surface-2 p-0.5 text-[12.5px]" role="group" aria-label="Decision maker filter">
+          <div className="flex shrink-0 rounded-full border border-line-strong bg-white p-0.5 text-[12.5px]" role="group" aria-label="Decision maker filter">
             {(['all', 'yes', 'no'] as const).map((value) => (
               <button
                 key={value}
@@ -138,8 +138,8 @@ export default function ConsultantsPage() {
                 onClick={() => { setDm(value); setPage(1); }}
                 aria-pressed={dm === value}
                 className={cn(
-                  'press rounded-[10px] px-3 py-1.5 font-medium',
-                  dm === value ? 'bg-surface text-fg shadow-card' : 'text-muted hover:text-fg'
+                  'press rounded-full px-3.5 py-1.5 font-medium',
+                  dm === value ? 'bg-ink text-[#f5f2ed]' : 'text-muted hover:text-ink'
                 )}
               >
                 {value === 'all' ? 'Everyone' : value === 'yes' ? 'Decision makers' : 'Not yet'}
@@ -265,7 +265,7 @@ function FilterChip({
       aria-pressed={active}
       className={cn(
         'press inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12.5px] font-medium transition-colors duration-150',
-        active ? 'border-accent/50 bg-accent-soft text-fg' : 'border-line text-muted hover:border-line-strong hover:text-fg'
+        active ? 'border-ink bg-ink text-[#f5f2ed]' : 'border-line-strong bg-white text-muted hover:border-ink/40 hover:text-ink'
       )}
     >
       {color && <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} aria-hidden />}

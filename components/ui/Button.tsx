@@ -3,9 +3,9 @@ import { cn } from '@/lib/format';
 type Variant = 'primary' | 'secondary' | 'ghost';
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-[image:var(--grad-brand)] text-on-accent shadow-glow hover:brightness-110',
-  secondary: 'border border-line bg-white text-fg shadow-card hover:border-accent/40 hover:text-accent',
-  ghost: 'text-muted hover:bg-accent-soft hover:text-accent',
+  primary: 'bg-ink text-[#f5f2ed] shadow-glow hover:bg-[#2a2a27]',
+  secondary: 'border border-line-strong bg-white text-ink hover:border-ink/40',
+  ghost: 'text-muted hover:bg-surface-2 hover:text-ink',
 };
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,11 +18,11 @@ export function Button({ variant = 'secondary', size = 'md', className, ...rest 
   return (
     <button
       className={cn(
-        'press inline-flex select-none items-center justify-center gap-2 rounded-xl font-medium',
+        'press inline-flex select-none items-center justify-center gap-2 rounded-full font-medium',
         'transition-[background-color,color,filter,box-shadow] duration-150 ease-out',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
         'disabled:cursor-not-allowed disabled:opacity-45',
-        size === 'sm' ? 'h-8 px-3 text-[13px]' : 'h-10 px-4 text-sm',
+        size === 'sm' ? 'h-8 px-3.5 text-[13px]' : 'h-10 px-5 text-sm',
         VARIANTS[variant],
         className
       )}
