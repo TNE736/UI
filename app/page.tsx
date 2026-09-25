@@ -41,9 +41,9 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative -mx-4 -mt-6 overflow-hidden sm:-mx-6 lg:-mt-8">
+      <section className="relative left-1/2 -mt-6 w-screen -translate-x-1/2 overflow-hidden lg:-mt-8">
         <Waves />
-        <div className="relative mx-auto grid min-h-[calc(100dvh-3.5rem)] max-w-7xl items-center gap-14 px-6 py-16 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:px-10">
+        <div className="relative mx-auto grid min-h-[calc(100dvh-4rem)] max-w-7xl items-center gap-14 px-6 py-16 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:px-10">
           <div className="rise flex flex-col items-center text-center lg:items-start lg:text-left">
             <p className="eyebrow mb-7 justify-center lg:justify-start">
               <span aria-hidden className="h-px w-10 bg-accent/50" />

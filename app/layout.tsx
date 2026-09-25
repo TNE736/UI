@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Fraunces, Inter } from 'next/font/google';
 import { Providers } from '@/components/providers/Providers';
-import { Sidebar } from '@/components/shell/Sidebar';
 import { Topbar } from '@/components/shell/Topbar';
 import { CommandMenu } from '@/components/shell/CommandMenu';
 import './globals.css';
@@ -30,12 +29,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
       <body className="font-sans">
         <Providers>
-          <div className="flex min-h-dvh">
-            <Sidebar />
-            <div className="flex min-w-0 flex-1 flex-col">
-              <Topbar />
-              <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-6 sm:px-6 lg:py-8">{children}</main>
-            </div>
+          <div className="flex min-h-dvh flex-col overflow-x-clip">
+            <Topbar />
+            <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-6 sm:px-6 lg:py-8">{children}</main>
           </div>
           <CommandMenu />
         </Providers>

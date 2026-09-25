@@ -88,7 +88,7 @@ app/
   api/                   read-only routes: overview, consultants, breakdowns
   globals.css            editorial theme tokens, typography, easing curves, motion utilities
 components/
-  shell/                 sidebar, top bar, command menu, theme toggle, live badge
+  shell/                 top navigation bar, command menu, live badge
   dashboard/             KPI card, funnel bars, stage donut, activity feed
   home/                  flowing background waves
   consultants/           detail side sheet, journey timeline
