@@ -1,0 +1,224 @@
+@import 'tailwindcss';
+
+/* Dark mode follows the class next-themes puts on <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─────────────────────────── Tokens ───────────────────────────
+ * Semantic colours, defined once per theme. Components only ever use the
+ * Tailwind names mapped below (bg-surface, text-muted, border-line, …).     */
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-2: #f1f2f7;
+  --surface-3: #e8eaf2;
+  --line: rgb(15 18 40 / 0.08);
+  --line-strong: rgb(15 18 40 / 0.14);
+  --fg: #0e1120;
+  --muted: #5b6078;
+  --faint: #8d91a8;
+
+  --accent: #6d4aff;
+  --accent-2: #b14cff;
+  --accent-soft: rgb(109 74 255 / 0.1);
+  --on-accent: #ffffff;
+
+  --success: #0f9f6e;
+  --warning: #c77a0a;
+  --danger: #dc2f45;
+  --info: #2f7cf6;
+
+  --shadow-card: 0 1px 2px rgb(16 20 45 / 0.04), 0 4px 16px -6px rgb(16 20 45 / 0.08);
+  --shadow-pop: 0 12px 40px -12px rgb(16 20 45 / 0.25), 0 2px 6px rgb(16 20 45 / 0.06);
+  --glow: 0 0 0 1px rgb(109 74 255 / 0.18), 0 8px 30px -10px rgb(109 74 255 / 0.45);
+  --grid-dot: rgb(15 18 40 / 0.06);
+}
+
+.dark {
+  --bg: #07080d;
+  --surface: #0e1018;
+  --surface-2: #151822;
+  --surface-3: #1d212e;
+  --line: rgb(255 255 255 / 0.07);
+  --line-strong: rgb(255 255 255 / 0.12);
+  --fg: #eef0f7;
+  --muted: #9aa0b6;
+  --faint: #636a82;
+
+  --accent: #8b6dff;
+  --accent-2: #c77dff;
+  --accent-soft: rgb(139 109 255 / 0.14);
+  --on-accent: #ffffff;
+
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #fb7185;
+  --info: #60a5fa;
+
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  --shadow-pop: 0 20px 60px -16px rgb(0 0 0 / 0.75), 0 0 0 1px rgb(255 255 255 / 0.06);
+  --glow: 0 0 0 1px rgb(139 109 255 / 0.3), 0 10px 40px -12px rgb(139 109 255 / 0.55);
+  --grid-dot: rgb(255 255 255 / 0.045);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
+  --shadow-glow: var(--glow);
+
+  /* Emil Kowalski's curves — built-in CSS easings are too weak for UI. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* ─────────────────────────── Base ─────────────────────────── */
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* Theme switches shouldn't flash-animate every surface. */
+.theme-switching * {
+  transition: none !important;
+}
+
+/* ─────────────────────────── Motion utilities ───────────────────────────
+ * Rules from the skills: transform/opacity only, ease-out, < 300 ms,
+ * press feedback on :active, never scale(0), reduced motion = gentler.    */
+
+/* Press feedback for anything pressable (100–160 ms, subtle scale). */
+.press {
+  transition: transform 160ms var(--ease-out);
+}
+.press:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* One-time entrance for page content. Keyframes are fine here: it plays once
+ * on mount and is never re-triggered rapidly. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.rise {
+  animation: rise 280ms var(--ease-out) both;
+}
+
+/* Stagger children (30–80 ms apart), decorative only — never blocks input. */
+.stagger > * {
+  animation: rise 280ms var(--ease-out) both;
+}
+.stagger > *:nth-child(2) { animation-delay: 40ms; }
+.stagger > *:nth-child(3) { animation-delay: 80ms; }
+.stagger > *:nth-child(4) { animation-delay: 120ms; }
+.stagger > *:nth-child(5) { animation-delay: 160ms; }
+.stagger > *:nth-child(6) { animation-delay: 200ms; }
+
+/* A live dot that breathes. Occasional, ambient, low amplitude. */
+@keyframes pulse-ring {
+  from {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: currentColor;
+  animation: pulse-ring 1.8s var(--ease-out) infinite;
+}
+
+/* Subtle dotted canvas behind the app. */
+.canvas-grid {
+  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Scrollbars that don't shout. */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Keep opacity/colour feedback, drop movement. */
+  .rise,
+  .stagger > * {
+    animation: fade 200ms ease both;
+  }
+  .press:active:not(:disabled) {
+    transform: none;
+  }
+  .live-dot::after {
+    animation: none;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ─────────────────────────── Command menu (cmdk) ─────────────────────────── */
+.cmd-group [cmdk-group-heading] {
+  padding: 8px 10px 4px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.cmd-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  color: var(--fg);
+  cursor: pointer;
+  user-select: none;
+}
+/* Keyboard selection moves instantly — no transition on a 100+/day action. */
+.cmd-item[data-selected='true'] {
+  background: var(--accent-soft);
+}
