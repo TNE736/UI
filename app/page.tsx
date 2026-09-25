@@ -1,185 +1,126 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { ArrowRight, BadgeCheck, MailCheck, UploadCloud, UserCheck, Users } from 'lucide-react';
-import type { Breakdowns, Consultant, Overview } from '@/lib/types';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import type { Overview } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
-import { percent, relativeTime } from '@/lib/format';
-import { PageHeader, pillPrimary } from '@/components/ui/PageHeader';
-import { Card } from '@/components/ui/Card';
-import { ErrorBanner } from '@/components/ui/States';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { Avatar } from '@/components/ui/Avatar';
-import { StagePill } from '@/components/ui/StagePill';
-import { KpiCard } from '@/components/dashboard/KpiCard';
-import { FunnelBars } from '@/components/dashboard/FunnelBars';
-import { StageDonut } from '@/components/dashboard/StageDonut';
-import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
-import { ConsultantSheet } from '@/components/consultants/ConsultantSheet';
+import { useLive } from '@/lib/live';
+import { NAV } from '@/components/shell/nav';
+import { Waves } from '@/components/home/Waves';
+import { pillPrimary, pillSecondary } from '@/components/ui/PageHeader';
 
-export default function OverviewPage() {
-  const overview = useResource<Overview>('/api/overview');
-  const breakdowns = useResource<Breakdowns>('/api/breakdowns');
-  const [selected, setSelected] = useState<Consultant | null>(null);
-  const data = overview.data;
-  const total = data?.total ?? 0;
+const FLOW = [
+  { title: 'Upload', text: 'A consultant CSV is checked in the browser and sent to the ingest API.' },
+  { title: 'Store', text: 'New people land in MongoDB as “loaded”. Existing ones are never overwritten.' },
+  { title: 'Approve', text: 'Marking someone a decision maker in Compass releases them to outreach.' },
+  { title: 'Reach out', text: 'bench-outreach’s Email Agent sends a role that matches their title.' },
+  { title: 'Qualify', text: 'Replies are researched, followed up and handed to the Bench TA team.' },
+];
+
+export default function HomePage() {
+  const { data } = useResource<Overview>('/api/overview');
+  const { status } = useLive();
+  const explore = NAV.filter((item) => item.href !== '/');
 
   return (
     <>
-      <PageHeader
-        index="01"
-        eyebrow="Live pipeline"
-        title="Pipeline"
-        accent="overview."
-        description={
-          data ? (
-            <>
-              {total} consultants in MongoDB · updated {relativeTime(data.generatedAt)}
-            </>
-          ) : (
-            'Live view of the consultant outreach pipeline.'
-          )
-        }
-        actions={
-          <Link href="/upload" className={pillPrimary}>
-            <UploadCloud className="h-4 w-4" /> Upload CSV
-          </Link>
-        }
-      />
+      {/* Hero */}
+      <section className="relative -mx-4 -mt-6 overflow-hidden sm:-mx-6 lg:-mt-8">
+        <Waves />
+        <div className="rise relative mx-auto flex min-h-[calc(100dvh-3.5rem)] max-w-4xl flex-col items-center justify-center px-6 py-20 text-center">
+          <p className="eyebrow mb-7 justify-center">
+            <span aria-hidden className="h-px w-10 bg-accent/50" />
+            <span>LeadOps Studio</span>
+            <span aria-hidden className="h-px w-10 bg-accent/50" />
+          </p>
 
-      {overview.error && (
-        <div className="mb-5">
-          <ErrorBanner message={overview.error} />
-        </div>
-      )}
+          <h1 className="font-display text-[46px] font-semibold leading-[1.02] text-ink sm:text-[68px] lg:text-[84px]">
+            Every consultant,
+            <br />
+            one living <em className="font-medium italic text-accent">pipeline.</em>
+          </h1>
 
-      {/* KPI row — staggered 40 ms apart on first paint only. */}
-      <div className="stagger grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard featured label="Consultants" value={data ? total : null} icon={Users} caption="Everyone in the pipeline" />
-        <KpiCard
-          label="Decision makers"
-          value={data?.decisionMakers ?? null}
-          icon={UserCheck}
-          share={total ? (data?.decisionMakers ?? 0) / total : 0}
-          caption={data ? `${percent(data.decisionMakers, total)} approved for outreach` : undefined}
-        />
-        <KpiCard
-          label="Emailed"
-          value={data?.reached.emailed ?? null}
-          icon={MailCheck}
-          share={total ? (data?.reached.emailed ?? 0) / total : 0}
-          caption={data ? `${percent(data.reached.emailed ?? 0, total)} reached by email` : undefined}
-        />
-        <KpiCard
-          label="Qualified"
-          value={data?.reached.qualified ?? null}
-          icon={BadgeCheck}
-          share={total ? (data?.reached.qualified ?? 0) / total : 0}
-          caption={data ? `${percent(data.reached.qualified ?? 0, total, 1)} conversion` : undefined}
-        />
-      </div>
+          <p className="mt-7 max-w-xl text-[16.5px] leading-relaxed text-muted">
+            Upload a roster, watch it land in MongoDB, and follow each consultant from the first email to the
+            hand-off — as it happens.
+          </p>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-5">
-        <Card
-          className="rise xl:col-span-3"
-          eyebrow="Conversion"
-          title="Pipeline funnel"
-          description="How many consultants reached each stage or went past it."
-          actions={
-            <Link href="/funnel" className="press inline-flex items-center gap-1 text-[12.5px] text-muted hover:text-fg">
-              Details <ArrowRight className="h-3.5 w-3.5" />
+          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/overview" className={pillPrimary}>
+              Open the overview <ArrowRight className="h-4 w-4" />
             </Link>
-          }
-        >
-          {data ? <FunnelBars reached={data.reached} total={total} /> : <ListSkeleton rows={7} />}
-        </Card>
-
-        <Card className="rise xl:col-span-2" eyebrow="Right now" title="Where everyone is" description="Current stage, including closed.">
-          {data ? <StageDonut byStage={data.byStage} total={total} /> : <Skeleton className="mx-auto h-48 w-48 rounded-full" />}
-        </Card>
-      </div>
-
-      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <Card className="rise" eyebrow="Mix" title="Top technologies" flush>
-          <div className="px-5 pb-5">
-            {breakdowns.data ? (
-              <TopList rows={breakdowns.data.technology.slice(0, 6)} total={total} />
-            ) : (
-              <ListSkeleton rows={6} />
-            )}
+            <Link href="/upload" className={pillSecondary}>
+              Upload a CSV
+            </Link>
           </div>
-        </Card>
 
-        <Card className="rise" eyebrow="Newest" title="Recently added" flush>
-          {data ? (
-            <ul className="divide-y divide-line border-t border-line">
-              {data.recent.map((person) => (
-                <li key={person.id}>
-                  <button
-                    type="button"
-                    onClick={() => setSelected(person)}
-                    className="flex w-full items-center gap-3 px-5 py-3 text-left transition-colors duration-150 hover:bg-surface-2"
-                  >
-                    <Avatar name={person.name} size={30} />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[13.5px] font-medium text-fg">{person.name}</span>
-                      <span className="block truncate text-[12px] text-faint">{person.technology ?? person.email}</span>
-                    </span>
-                    <StagePill stage={person.stage} />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="px-5 pb-5">
-              <ListSkeleton rows={6} />
-            </div>
-          )}
-        </Card>
+          <ul className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-muted">
+            <li className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+              {data ? `${data.total} consultants in MongoDB` : 'Reading MongoDB…'}
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+              {data ? `${data.reached.emailed ?? 0} emailed so far` : 'Counting outreach…'}
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+              {status === 'live' ? 'Live updates on' : 'Refreshing every 15 seconds'}
+            </li>
+          </ul>
+        </div>
+      </section>
 
-        <Card className="rise" eyebrow="Live" title="Activity" flush>
-          <div className="border-t border-line">
-            <ActivityFeed />
-          </div>
-        </Card>
-      </div>
+      {/* How it flows */}
+      <section className="mx-auto max-w-6xl py-16">
+        <p className="eyebrow mb-4">
+          <span className="font-display text-[13px] font-medium tracking-normal">01</span>
+          <span className="text-muted">How it flows</span>
+          <span aria-hidden className="h-px w-16 bg-line-strong" />
+        </p>
+        <h2 className="font-display max-w-2xl text-[34px] font-semibold leading-tight text-ink sm:text-[42px]">
+          From a spreadsheet to a <em className="font-medium italic text-accent">conversation.</em>
+        </h2>
 
-      <ConsultantSheet consultant={selected} onClose={() => setSelected(null)} />
+        <ol className="mt-10 grid gap-px overflow-hidden rounded-[22px] bg-line shadow-card sm:grid-cols-2 lg:grid-cols-5">
+          {FLOW.map((step, index) => (
+            <li key={step.title} className="bg-surface p-6">
+              <span className="font-display text-[15px] font-medium text-accent">0{index + 1}</span>
+              <p className="font-display mt-3 text-[22px] font-semibold text-ink">{step.title}</p>
+              <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{step.text}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* Explore */}
+      <section className="mx-auto max-w-6xl pb-10">
+        <p className="eyebrow mb-4">
+          <span className="font-display text-[13px] font-medium tracking-normal">02</span>
+          <span className="text-muted">Explore</span>
+          <span aria-hidden className="h-px w-16 bg-line-strong" />
+        </p>
+        <h2 className="font-display max-w-2xl text-[34px] font-semibold leading-tight text-ink sm:text-[42px]">
+          Pick a place to <em className="font-medium italic text-accent">start.</em>
+        </h2>
+
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {explore.map(({ href, label, description, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className="press group flex flex-col rounded-[22px] bg-surface p-6 shadow-card transition-shadow duration-200 ease-out hover:shadow-pop"
+            >
+              <div className="flex items-center justify-between">
+                <Icon className="h-5 w-5 text-faint transition-colors duration-150 group-hover:text-accent" strokeWidth={1.75} />
+                <ArrowUpRight className="h-4 w-4 text-faint transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-ink" />
+              </div>
+              <p className="font-display mt-8 text-[24px] font-semibold text-ink">{label}</p>
+              <p className="mt-1.5 text-[13.5px] text-muted">{description}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
     </>
-  );
-}
-
-function TopList({ rows, total }: { rows: { label: string; count: number }[]; total: number }) {
-  const max = Math.max(1, ...rows.map((row) => row.count));
-  return (
-    <ul className="space-y-3 border-t border-line pt-4">
-      {rows.map((row) => (
-        <li key={row.label}>
-          <div className="mb-1 flex justify-between gap-3 text-[13px]">
-            <span className="truncate text-fg">{row.label}</span>
-            <span className="shrink-0 tabular-nums text-muted">
-              {row.count} <span className="text-faint">{percent(row.count, total)}</span>
-            </span>
-          </div>
-          <div className="h-[3px] overflow-hidden rounded-full bg-surface-3">
-            <div
-              className="h-full origin-left rounded-full bg-accent transition-transform duration-[250ms] ease-out"
-              style={{ transform: `scaleX(${row.count / max})` }}
-            />
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function ListSkeleton({ rows }: { rows: number }) {
-  return (
-    <div className="space-y-3">
-      {Array.from({ length: rows }, (_, i) => (
-        <Skeleton key={i} className="h-7 w-full" />
-      ))}
-    </div>
   );
 }

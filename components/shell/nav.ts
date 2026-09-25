@@ -2,6 +2,7 @@ import {
   BarChart3,
   Filter,
   GitCommitHorizontal,
+  Home,
   LayoutDashboard,
   UploadCloud,
   Users,
@@ -17,7 +18,8 @@ export interface NavItem {
 
 /** Single source of truth for navigation (sidebar, mobile nav, command menu, page titles). */
 export const NAV: NavItem[] = [
-  { href: '/', label: 'Overview', description: 'Pipeline at a glance', icon: LayoutDashboard },
+  { href: '/', label: 'Home', description: 'Start here', icon: Home },
+  { href: '/overview', label: 'Overview', description: 'Pipeline at a glance', icon: LayoutDashboard },
   { href: '/upload', label: 'Upload', description: 'Add consultants from CSV', icon: UploadCloud },
   { href: '/consultants', label: 'Consultants', description: 'Search and filter everyone', icon: Users },
   { href: '/funnel', label: 'Funnel', description: 'Stage-by-stage conversion', icon: Filter },

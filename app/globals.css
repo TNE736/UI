@@ -158,6 +158,33 @@ body {
   animation: pulse-ring 1.8s var(--ease-out) infinite;
 }
 
+/* ─────────────────────────── Home waves ───────────────────────────
+ * Ambient, constant motion: linear, transform-only, very slow (60–95 s per
+ * wave). Each layer is two wave periods wide and slides exactly one period,
+ * so the loop is seamless. Removed entirely for reduced motion. */
+.wave-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  animation-name: wave-slide;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+.wave-layer-reverse {
+  animation-direction: reverse;
+}
+@keyframes wave-slide {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 /* Scrollbars that don't shout. */
 .thin-scroll {
   scrollbar-width: thin;
@@ -173,7 +200,8 @@ body {
   .press:active:not(:disabled) {
     transform: none;
   }
-  .live-dot::after {
+  .live-dot::after,
+  .wave-layer {
     animation: none;
   }
 }

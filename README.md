@@ -24,7 +24,8 @@ from his curated list (motion, recharts, sonner, NumberFlow, cmdk, Base UI).
 
 | Page | What it shows |
 |---|---|
-| **Overview** `/` | Animated KPIs, the pipeline funnel, where everyone is right now (donut), top technologies, newest consultants, live activity |
+| **Home** `/` | Slow, flowing warm waves behind the headline (ambient, transform-only, stops for reduced motion), live counts, how the pipeline flows, and a way into every page |
+| **Overview** `/overview` | Animated KPIs, the pipeline funnel, where everyone is right now (donut), top technologies, newest consultants, live activity |
 | **Upload** `/upload` | Drag-and-drop CSV, in-browser row count and type check, save via the ingest API with a progress toast, full result and rejected rows |
 | **Consultants** `/consultants` | Search, stage and decision-maker filters, sortable columns, pagination, CSV export, detail side sheet |
 | **Funnel** `/funnel` | Stage-by-stage conversion and drop-off, headline conversion, closed-early stages, email status |
@@ -46,7 +47,7 @@ the MongoDB relay, the ingest API on 8000 and the live-updates gateway on 4100.
 ```bash
 cp .env.example .env.local   # first time only
 npm install                  # first time only
-npm run dev                  # http://localhost:3100
+npm run dev                  # http://localhost:3100 (home), /overview for the dashboard
 ```
 
 `.env.local` is git-ignored. For MongoDB Atlas, set `MONGODB_URI` to the Atlas
@@ -79,13 +80,15 @@ consultants without publishing events, so polling keeps the numbers current.
 
 ```
 app/
-  page.tsx               Overview
+  page.tsx               Home (waves hero)
+  overview/              Overview
   upload/ consultants/ funnel/ journey/ insights/   the other pages
   api/                   read-only routes: overview, consultants, breakdowns
   globals.css            editorial theme tokens, typography, easing curves, motion utilities
 components/
   shell/                 sidebar, top bar, command menu, theme toggle, live badge
   dashboard/             KPI card, funnel bars, stage donut, activity feed
+  home/                  flowing background waves
   consultants/           detail side sheet, journey timeline
   charts/                breakdown chart, themed tooltip
   ui/                    card, button, stage pill, avatar, skeleton, states
