@@ -2,9 +2,8 @@
 
 import { Command } from 'cmdk';
 import { useRouter } from 'next/navigation';
-import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { ExternalLink, Moon, Sun, User } from 'lucide-react';
+import { ExternalLink, User } from 'lucide-react';
 import type { Consultant, ConsultantPage } from '@/lib/types';
 import { StagePill } from '@/components/ui/StagePill';
 import { NAV } from './nav';
@@ -24,7 +23,6 @@ export function CommandMenu() {
   const [query, setQuery] = useState('');
   const [people, setPeople] = useState<Consultant[]>([]);
   const router = useRouter();
-  const { resolvedTheme, setTheme } = useTheme();
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -79,7 +77,7 @@ export function CommandMenu() {
       <Command.Input
         value={query}
         onValueChange={setQuery}
-        placeholder="Search consultants, pages, actions…"
+        placeholder="Search consultants or jump to a page…"
         className="h-13 w-full border-b border-line bg-transparent px-4 text-[15px] text-fg outline-none placeholder:text-faint"
       />
       <Command.List className="thin-scroll max-h-[360px] overflow-y-auto p-2 text-[13.5px]">
@@ -116,14 +114,6 @@ export function CommandMenu() {
         </Command.Group>
 
         <Command.Group heading="Actions" className="cmd-group">
-          <Command.Item
-            value="toggle theme dark light"
-            onSelect={() => run(() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark'))}
-            className="cmd-item"
-          >
-            {resolvedTheme === 'dark' ? <Sun className="h-4 w-4 text-faint" /> : <Moon className="h-4 w-4 text-faint" />}
-            Switch to {resolvedTheme === 'dark' ? 'light' : 'dark'} theme
-          </Command.Item>
           <Command.Item
             value="open classic dashboard"
             onSelect={() => run(() => window.open('http://localhost:3000', '_blank', 'noreferrer'))}

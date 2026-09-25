@@ -28,15 +28,15 @@ interface StageMeta {
 }
 
 export const STAGE_META: Record<Stage, StageMeta> = {
-  loaded: { label: 'Loaded', description: 'Saved to MongoDB from a CSV upload', color: '#8b93b0' },
-  emailed: { label: 'Emailed', description: 'Email Agent sent a matching role', color: '#4f8df7' },
-  engaged: { label: 'Engaged', description: 'Replied to the outreach email', color: '#7c6cff' },
-  researched: { label: 'Researched', description: 'Research done on the interested consultant', color: '#a85cf5' },
-  followed_up: { label: 'Followed up', description: 'Qualifying follow-up sent', color: '#d257d8' },
-  qualified: { label: 'Qualified', description: 'Met the bar for the Bench TA team', color: '#22c38e' },
+  loaded: { label: 'Loaded', description: 'Saved to MongoDB from a CSV upload', color: '#7c6cff' },
+  emailed: { label: 'Emailed', description: 'Email Agent sent a matching role', color: '#3b82f6' },
+  engaged: { label: 'Engaged', description: 'Replied to the outreach email', color: '#06b6d4' },
+  researched: { label: 'Researched', description: 'Research done on the interested consultant', color: '#a855f7' },
+  followed_up: { label: 'Followed up', description: 'Qualifying follow-up sent', color: '#ec4899' },
+  qualified: { label: 'Qualified', description: 'Met the bar for the Bench TA team', color: '#10b981' },
   handed_off: { label: 'Handed off', description: 'Handed to the Bench TA team', color: '#14b8a6' },
   suppressed: { label: 'Suppressed', description: 'Opted out or suppressed', color: '#e0a33a' },
-  closed: { label: 'Closed', description: 'Closed without qualifying', color: '#6b7280' },
+  closed: { label: 'Closed', description: 'Closed without qualifying', color: '#64748b' },
   invalid: { label: 'Invalid', description: 'Bad data — could not be worked', color: '#ef5b6e' },
   referred: { label: 'Referred', description: 'Referred elsewhere', color: '#38bdf8' },
 };

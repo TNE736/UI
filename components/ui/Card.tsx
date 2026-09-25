@@ -14,14 +14,14 @@ export function Card({ title, eyebrow, description, actions, flush, className, c
   const hasHeader = title || eyebrow || description || actions;
   return (
     <section
-      className={cn('relative rounded-2xl border border-line bg-surface shadow-card', className)}
+      className={cn('relative rounded-2xl border border-white/80 bg-white/90 shadow-card backdrop-blur', className)}
       {...rest}
     >
       {hasHeader && (
         <header className="flex items-start justify-between gap-4 px-5 pt-5">
           <div className="min-w-0">
             {eyebrow && (
-              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-faint">{eyebrow}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">{eyebrow}</p>
             )}
             {title && <h2 className="mt-1 text-[15px] font-semibold tracking-tight text-fg">{title}</h2>}
             {description && <p className="mt-1 text-[13px] text-muted">{description}</p>}

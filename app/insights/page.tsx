@@ -1,5 +1,6 @@
 'use client';
 
+import { BarChart3 } from 'lucide-react';
 import type { BreakdownRow, Breakdowns } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
 import { percent } from '@/lib/format';
@@ -23,6 +24,9 @@ export default function InsightsPage() {
   return (
     <>
       <PageHeader
+        tone="brand"
+        icon={BarChart3}
+        eyebrow="Bench mix"
         title="Insights"
         description="Who is on the bench. Each bar splits decision makers (green) from everyone else."
       />
@@ -53,9 +57,10 @@ export default function InsightsPage() {
 
 function Leader({ label, row, total }: { label: string; row?: BreakdownRow; total: number }) {
   return (
-    <div className="rounded-2xl border border-line bg-surface p-4 shadow-card">
+    <div className="relative overflow-hidden rounded-2xl border border-white/80 bg-white/90 p-4 shadow-card backdrop-blur">
+      <span aria-hidden className="absolute inset-x-0 top-0 h-1" style={{ background: 'var(--grad-brand)' }} />
       <p className="text-[12px] text-muted">{label}</p>
-      <p className="mt-1.5 truncate text-[17px] font-semibold tracking-tight text-fg" title={row?.label}>
+      <p className="mt-1.5 truncate bg-clip-text text-[17px] font-semibold tracking-tight text-transparent" style={{ backgroundImage: 'var(--grad-brand)' }} title={row?.label}>
         {row?.label ?? '—'}
       </p>
       <p className="mt-0.5 text-[12px] tabular-nums text-faint">

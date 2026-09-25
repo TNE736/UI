@@ -11,7 +11,7 @@ The UI follows [Emil Kowalski's design-engineering skills](https://github.com/em
 strong custom easing, sub-300 ms motion on `transform`/`opacity` only, press
 feedback on every control, origin-aware and interruptible transitions, no
 animation on keyboard-driven actions, reduced-motion support, and libraries
-from his curated list.
+from his curated list (motion, recharts, sonner, NumberFlow, cmdk, Base UI).
 
 | | Classic dashboard | LeadOps Studio |
 |---|---|---|
@@ -31,8 +31,9 @@ from his curated list.
 | **Journey** `/journey` | Any consultant's path through the seven stages, linkable (`/journey?id=…`) |
 | **Insights** `/insights` | Technology, title, seniority and visa breakdowns, split by decision makers |
 
-Plus a **Ctrl/⌘ K command menu** (search consultants, jump to pages, switch
-theme) and **dark / light themes**.
+Plus a **Ctrl/⌘ K command menu** (search consultants, jump to pages). The look
+is one bright, vibrant theme: a soft violet-blue gradient canvas, a gradient
+hero banner per page and gradient KPI cards.
 
 ## Running it
 
@@ -78,7 +79,7 @@ app/
   page.tsx               Overview
   upload/ consultants/ funnel/ journey/ insights/   the other pages
   api/                   read-only routes: overview, consultants, breakdowns
-  globals.css            theme tokens (dark + light), easing curves, motion utilities
+  globals.css            bright theme tokens, gradients, easing curves, motion utilities
 components/
   shell/                 sidebar, top bar, command menu, theme toggle, live badge
   dashboard/             KPI card, funnel bars, stage donut, activity feed

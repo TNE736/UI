@@ -82,6 +82,9 @@ export default function UploadPage() {
   return (
     <>
       <PageHeader
+        tone="sunset"
+        icon={UploadCloud}
+        eyebrow="Ingestion"
         title="Upload consultants"
         description="Drop a consultant CSV. New people are saved to MongoDB as “loaded”; anyone already there is skipped, never overwritten."
       />

@@ -6,7 +6,7 @@ import type { Consultant, ConsultantPage } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
 import { ALL_STAGES, STAGE_META, type Stage } from '@/lib/stages';
 import { cn, relativeTime } from '@/lib/format';
-import { PageHeader } from '@/components/ui/PageHeader';
+import { PageHeader, heroButtonClass } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { StagePill } from '@/components/ui/StagePill';
@@ -86,12 +86,15 @@ export default function ConsultantsPage() {
   return (
     <>
       <PageHeader
+        tone="ocean"
+        icon={Users}
+        eyebrow="Directory"
         title="Consultants"
         description={data ? `${data.total} match${data.total === 1 ? '' : 'es'}` : 'Everyone in the pipeline, searchable.'}
         actions={
-          <Button variant="secondary" size="sm" onClick={exportCsv} disabled={!data?.total}>
+          <button type="button" className={`${heroButtonClass} disabled:opacity-60`} onClick={exportCsv} disabled={!data?.total}>
             <Download className="h-4 w-4" /> Export CSV
-          </Button>
+          </button>
         }
       />
 

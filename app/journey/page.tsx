@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Search, UserRound } from 'lucide-react';
+import { GitCommitHorizontal, Search, UserRound } from 'lucide-react';
 import type { ConsultantPage } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
 import { PROGRESS_STAGES, STAGE_META, isClosing, progressIndex } from '@/lib/stages';
@@ -54,7 +54,7 @@ function Journey() {
 
   return (
     <>
-      <PageHeader title="Consultant journey" description="Pick anyone to see how far they’ve come: loaded → emailed → engaged → researched → followed up → qualified → handed off." />
+      <PageHeader tone="teal" icon={GitCommitHorizontal} eyebrow="Trace" title="Consultant journey" description="Pick anyone to see how far they’ve come: loaded → emailed → engaged → researched → followed up → qualified → handed off." />
       {error && (
         <div className="mb-4">
           <ErrorBanner message={error} />

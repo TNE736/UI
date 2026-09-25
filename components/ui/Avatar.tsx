@@ -17,9 +17,9 @@ export function Avatar({ name, size = 32, className }: { name: string; size?: nu
         width: size,
         height: size,
         fontSize: size * 0.38,
-        color: `hsl(${h} 70% 72%)`,
-        background: `linear-gradient(135deg, hsl(${h} 60% 45% / 0.28), hsl(${(h + 40) % 360} 60% 45% / 0.18))`,
-        boxShadow: `inset 0 0 0 1px hsl(${h} 60% 60% / 0.25)`,
+        color: '#fff',
+        background: `linear-gradient(135deg, hsl(${h} 78% 62%), hsl(${(h + 45) % 360} 72% 52%))`,
+        boxShadow: `0 4px 10px -4px hsl(${h} 70% 45% / 0.6)`,
       }}
     >
       {initials(name)}

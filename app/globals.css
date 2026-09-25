@@ -1,63 +1,41 @@
 @import 'tailwindcss';
 
-/* Dark mode follows the class next-themes puts on <html>. */
-@custom-variant dark (&:where(.dark, .dark *));
-
 /* ─────────────────────────── Tokens ───────────────────────────
- * Semantic colours, defined once per theme. Components only ever use the
- * Tailwind names mapped below (bg-surface, text-muted, border-line, …).     */
+ * One bright, vibrant theme. Components only ever use the Tailwind names
+ * mapped below (bg-surface, text-muted, border-line, …).                  */
 :root {
-  --bg: #f6f7fb;
+  --bg: #f3f4fd;
   --surface: #ffffff;
-  --surface-2: #f1f2f7;
-  --surface-3: #e8eaf2;
-  --line: rgb(15 18 40 / 0.08);
-  --line-strong: rgb(15 18 40 / 0.14);
-  --fg: #0e1120;
-  --muted: #5b6078;
-  --faint: #8d91a8;
+  --surface-2: #f5f6fd;
+  --surface-3: #eaecf8;
+  --line: rgb(40 44 110 / 0.08);
+  --line-strong: rgb(40 44 110 / 0.15);
+  --fg: #141735;
+  --muted: #555b80;
+  --faint: #8e94b5;
 
-  --accent: #6d4aff;
-  --accent-2: #b14cff;
-  --accent-soft: rgb(109 74 255 / 0.1);
+  --accent: #6c47ff;
+  --accent-2: #3d7bff;
+  --accent-soft: rgb(108 71 255 / 0.1);
   --on-accent: #ffffff;
 
-  --success: #0f9f6e;
-  --warning: #c77a0a;
-  --danger: #dc2f45;
+  --success: #0ea371;
+  --warning: #d9820b;
+  --danger: #e2334d;
   --info: #2f7cf6;
 
-  --shadow-card: 0 1px 2px rgb(16 20 45 / 0.04), 0 4px 16px -6px rgb(16 20 45 / 0.08);
-  --shadow-pop: 0 12px 40px -12px rgb(16 20 45 / 0.25), 0 2px 6px rgb(16 20 45 / 0.06);
-  --glow: 0 0 0 1px rgb(109 74 255 / 0.18), 0 8px 30px -10px rgb(109 74 255 / 0.45);
-  --grid-dot: rgb(15 18 40 / 0.06);
-}
+  /* Brand gradients — violet → blue is the spine; the others are its family. */
+  --grad-brand: linear-gradient(120deg, #7b4dff 0%, #5a5cff 45%, #2f8cff 100%);
+  --grad-violet: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  --grad-blue: linear-gradient(135deg, #3b82f6, #4f46e5);
+  --grad-pink: linear-gradient(135deg, #ec4899, #a855f7);
+  --grad-teal: linear-gradient(135deg, #14b8a6, #0ea5e9);
+  --grad-amber: linear-gradient(135deg, #f59e0b, #f43f5e);
 
-.dark {
-  --bg: #07080d;
-  --surface: #0e1018;
-  --surface-2: #151822;
-  --surface-3: #1d212e;
-  --line: rgb(255 255 255 / 0.07);
-  --line-strong: rgb(255 255 255 / 0.12);
-  --fg: #eef0f7;
-  --muted: #9aa0b6;
-  --faint: #636a82;
-
-  --accent: #8b6dff;
-  --accent-2: #c77dff;
-  --accent-soft: rgb(139 109 255 / 0.14);
-  --on-accent: #ffffff;
-
-  --success: #34d399;
-  --warning: #fbbf24;
-  --danger: #fb7185;
-  --info: #60a5fa;
-
-  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 8px 24px -12px rgb(0 0 0 / 0.6);
-  --shadow-pop: 0 20px 60px -16px rgb(0 0 0 / 0.75), 0 0 0 1px rgb(255 255 255 / 0.06);
-  --glow: 0 0 0 1px rgb(139 109 255 / 0.3), 0 10px 40px -12px rgb(139 109 255 / 0.55);
-  --grid-dot: rgb(255 255 255 / 0.045);
+  --shadow-card: 0 1px 2px rgb(40 44 110 / 0.04), 0 10px 30px -14px rgb(60 50 180 / 0.18);
+  --shadow-pop: 0 24px 60px -20px rgb(50 40 160 / 0.35), 0 2px 8px rgb(40 44 110 / 0.08);
+  --glow: 0 10px 30px -10px rgb(108 71 255 / 0.55);
+  --grid-dot: rgb(60 64 140 / 0.07);
 }
 
 @theme inline {
@@ -99,7 +77,12 @@ html {
 }
 
 body {
-  background: var(--bg);
+  background:
+    radial-gradient(1000px 520px at 0% 0%, rgb(139 92 246 / 0.16), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgb(59 130 246 / 0.14), transparent 60%),
+    radial-gradient(900px 600px at 80% 100%, rgb(236 72 153 / 0.1), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
   color: var(--fg);
   font-feature-settings: 'cv11', 'ss01';
   -webkit-font-smoothing: antialiased;
@@ -109,9 +92,17 @@ body {
   background: var(--accent-soft);
 }
 
-/* Theme switches shouldn't flash-animate every surface. */
-.theme-switching * {
-  transition: none !important;
+/* Decorative light blobs inside gradient banners and KPI cards. */
+.hero-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(40px);
+  pointer-events: none;
+}
+.hero-dots {
+  background-image: radial-gradient(rgb(255 255 255 / 0.22) 1px, transparent 1px);
+  background-size: 18px 18px;
+  mask-image: linear-gradient(90deg, transparent, black 60%);
 }
 
 /* ─────────────────────────── Motion utilities ───────────────────────────

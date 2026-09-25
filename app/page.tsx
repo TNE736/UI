@@ -2,12 +2,11 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowRight, BadgeCheck, MailCheck, UploadCloud, UserCheck, Users } from 'lucide-react';
+import { Activity, ArrowRight, BadgeCheck, MailCheck, UploadCloud, UserCheck, Users } from 'lucide-react';
 import type { Breakdowns, Consultant, Overview } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
 import { percent, relativeTime } from '@/lib/format';
-import { STAGE_META } from '@/lib/stages';
-import { PageHeader } from '@/components/ui/PageHeader';
+import { PageHeader, heroButtonClass } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
 import { ErrorBanner } from '@/components/ui/States';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -29,6 +28,9 @@ export default function OverviewPage() {
   return (
     <>
       <PageHeader
+        tone="brand"
+        icon={Activity}
+        eyebrow="Live pipeline"
         title="Pipeline overview"
         description={
           data ? (
@@ -40,10 +42,7 @@ export default function OverviewPage() {
           )
         }
         actions={
-          <Link
-            href="/upload"
-            className="press inline-flex h-10 items-center gap-2 rounded-xl bg-gradient-to-b from-accent to-[color-mix(in_oklab,var(--accent)_82%,black)] px-4 text-sm font-medium text-on-accent shadow-glow transition-[filter] duration-150 hover:brightness-110"
-          >
+          <Link href="/upload" className={heroButtonClass}>
             <UploadCloud className="h-4 w-4" /> Upload CSV
           </Link>
         }
@@ -57,12 +56,12 @@ export default function OverviewPage() {
 
       {/* KPI row — staggered 40 ms apart on first paint only. */}
       <div className="stagger grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Consultants" value={data ? total : null} icon={Users} color="#8b6dff" caption="Everyone in the pipeline" />
+        <KpiCard label="Consultants" value={data ? total : null} icon={Users} gradient="var(--grad-violet)" caption="Everyone in the pipeline" />
         <KpiCard
           label="Decision makers"
           value={data?.decisionMakers ?? null}
           icon={UserCheck}
-          color="#4f8df7"
+          gradient="var(--grad-blue)"
           share={total ? (data?.decisionMakers ?? 0) / total : 0}
           caption={data ? `${percent(data.decisionMakers, total)} approved for outreach` : undefined}
         />
@@ -70,7 +69,7 @@ export default function OverviewPage() {
           label="Emailed"
           value={data?.reached.emailed ?? null}
           icon={MailCheck}
-          color={STAGE_META.engaged.color}
+          gradient="var(--grad-pink)"
           share={total ? (data?.reached.emailed ?? 0) / total : 0}
           caption={data ? `${percent(data.reached.emailed ?? 0, total)} reached by email` : undefined}
         />
@@ -78,7 +77,7 @@ export default function OverviewPage() {
           label="Qualified"
           value={data?.reached.qualified ?? null}
           icon={BadgeCheck}
-          color={STAGE_META.qualified.color}
+          gradient="var(--grad-teal)"
           share={total ? (data?.reached.qualified ?? 0) / total : 0}
           caption={data ? `${percent(data.reached.qualified ?? 0, total, 1)} conversion` : undefined}
         />

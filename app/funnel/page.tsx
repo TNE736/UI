@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDown, Mail, TrendingDown, Trophy, UserCheck } from 'lucide-react';
+import { ArrowDown, Filter, Mail, TrendingDown, Trophy, UserCheck } from 'lucide-react';
 import type { Overview } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
 import { CLOSING_STAGES, PROGRESS_STAGES, STAGE_META } from '@/lib/stages';
@@ -32,6 +32,9 @@ export default function FunnelPage() {
   return (
     <>
       <PageHeader
+        tone="violet"
+        icon={Filter}
+        eyebrow="Conversion"
         title="Conversion funnel"
         description="Each bar counts consultants who reached that stage or went further. Arrows show how many continued from the stage before."
       />
@@ -160,9 +163,12 @@ function Stat({
 }) {
   const ready = value !== undefined || text !== undefined;
   return (
-    <div className="rounded-2xl border border-line bg-surface p-5 shadow-card">
-      <p className="flex items-center gap-2 text-[12.5px] font-medium text-muted">
-        <Icon className="h-4 w-4 text-accent" /> {label}
+    <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-card backdrop-blur">
+      <p className="flex items-center gap-2.5 text-[12.5px] font-medium text-muted">
+        <span className="grid h-8 w-8 place-items-center rounded-lg text-white shadow-glow" style={{ background: 'var(--grad-brand)' }}>
+          <Icon className="h-4 w-4" />
+        </span>
+        {label}
       </p>
       <div className="mt-3 min-h-9 text-[26px] font-semibold leading-tight tracking-tight text-fg">
         {!ready ? <Skeleton className="h-8 w-24" /> : text !== undefined ? <span className="text-[17px]">{text}</span> : <AnimatedNumber value={value!} suffix={suffix} />}

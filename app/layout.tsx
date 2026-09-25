@@ -15,18 +15,16 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f6f7fb' },
-    { media: '(prefers-color-scheme: dark)', color: '#07080d' },
-  ],
+  themeColor: '#f3f4fd',
+  colorScheme: 'light',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="font-sans">
         <Providers>
-          <div className="canvas-grid flex min-h-dvh">
+          <div className="flex min-h-dvh">
             <Sidebar />
             <div className="flex min-w-0 flex-1 flex-col">
               <Topbar />

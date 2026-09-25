@@ -3,10 +3,9 @@ import { cn } from '@/lib/format';
 type Variant = 'primary' | 'secondary' | 'ghost';
 
 const VARIANTS: Record<Variant, string> = {
-  primary:
-    'bg-gradient-to-b from-accent to-[color-mix(in_oklab,var(--accent)_82%,black)] text-on-accent shadow-glow hover:brightness-110',
-  secondary: 'border border-line-strong bg-surface-2 text-fg hover:bg-surface-3',
-  ghost: 'text-muted hover:bg-surface-2 hover:text-fg',
+  primary: 'bg-[image:var(--grad-brand)] text-on-accent shadow-glow hover:brightness-110',
+  secondary: 'border border-line bg-white text-fg shadow-card hover:border-accent/40 hover:text-accent',
+  ghost: 'text-muted hover:bg-accent-soft hover:text-accent',
 };
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
