@@ -1,29 +1,35 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { ArrowRight, BadgeCheck, MailCheck, UploadCloud, UserCheck, Users } from 'lucide-react';
-import type { Breakdowns, Consultant, Overview } from '@/lib/types';
+import { ArrowRight, ArrowUpRight, UploadCloud } from 'lucide-react';
+import type { Breakdowns, Overview } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
+import { useLive } from '@/lib/live';
 import { percent, relativeTime } from '@/lib/format';
+import { STAGE_META } from '@/lib/stages';
 import { PageHeader, pillPrimary } from '@/components/ui/PageHeader';
-import { Card } from '@/components/ui/Card';
 import { ErrorBanner } from '@/components/ui/States';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Avatar } from '@/components/ui/Avatar';
-import { StagePill } from '@/components/ui/StagePill';
-import { KpiCard } from '@/components/dashboard/KpiCard';
-import { FunnelBars } from '@/components/dashboard/FunnelBars';
-import { StageDonut } from '@/components/dashboard/StageDonut';
+import { AnimatedNumber } from '@/components/ui/Number';
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
-import { ConsultantSheet } from '@/components/consultants/ConsultantSheet';
+import { Tile } from '@/components/overview/Tile';
+import { StageRibbon } from '@/components/overview/StageRibbon';
+import { RateRing } from '@/components/overview/RateRing';
+import { StageStepper } from '@/components/overview/StageStepper';
 
+/**
+ * Bento layout, 12 columns. One hero tile carries the headline figure; the
+ * rest step down in size and weight so the eye has an order to follow:
+ * total → approval rate → what to do next → the journey → the details.
+ */
 export default function OverviewPage() {
   const overview = useResource<Overview>('/api/overview');
   const breakdowns = useResource<Breakdowns>('/api/breakdowns');
-  const [selected, setSelected] = useState<Consultant | null>(null);
+  const { status } = useLive();
   const data = overview.data;
   const total = data?.total ?? 0;
+  const awaitingReview = data ? Math.max(total - data.decisionMakers, 0) : 0;
 
   return (
     <>
@@ -32,15 +38,7 @@ export default function OverviewPage() {
         eyebrow="Live pipeline"
         title="Pipeline"
         accent="overview."
-        description={
-          data ? (
-            <>
-              {total} consultants in MongoDB · updated {relativeTime(data.generatedAt)}
-            </>
-          ) : (
-            'Live view of the consultant outreach pipeline.'
-          )
-        }
+        description={data ? `Updated ${relativeTime(data.generatedAt)} · refreshes live` : 'Reading MongoDB…'}
         actions={
           <Link href="/upload" className={pillPrimary}>
             <UploadCloud className="h-4 w-4" /> Upload CSV
@@ -49,137 +47,190 @@ export default function OverviewPage() {
       />
 
       {overview.error && (
-        <div className="mb-5">
+        <div className="mb-6">
           <ErrorBanner message={overview.error} />
         </div>
       )}
 
-      {/* KPI row — staggered 40 ms apart on first paint only. */}
-      <div className="stagger grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard featured label="Consultants" value={data ? total : null} icon={Users} caption="Everyone in the pipeline" />
-        <KpiCard
-          label="Decision makers"
-          value={data?.decisionMakers ?? null}
-          icon={UserCheck}
-          share={total ? (data?.decisionMakers ?? 0) / total : 0}
-          caption={data ? `${percent(data.decisionMakers, total)} approved for outreach` : undefined}
-        />
-        <KpiCard
-          label="Emailed"
-          value={data?.reached.emailed ?? null}
-          icon={MailCheck}
-          share={total ? (data?.reached.emailed ?? 0) / total : 0}
-          caption={data ? `${percent(data.reached.emailed ?? 0, total)} reached by email` : undefined}
-        />
-        <KpiCard
-          label="Qualified"
-          value={data?.reached.qualified ?? null}
-          icon={BadgeCheck}
-          share={total ? (data?.reached.qualified ?? 0) / total : 0}
-          caption={data ? `${percent(data.reached.qualified ?? 0, total, 1)} conversion` : undefined}
-        />
-      </div>
+      <div className="stagger grid grid-cols-1 gap-5 lg:grid-cols-12">
+        {/* ── Hero: the headline figure and where everyone is ── */}
+        <Tile
+          tone="ink"
+          label="Consultants in the pipeline"
+          aside={
+            <span className="flex items-center gap-2 text-[12px] text-on-ink-muted">
+              <span className="live-dot relative h-1.5 w-1.5 rounded-full bg-accent-2 text-accent-2" />
+              {status === 'live' ? 'Live' : 'Polling'}
+            </span>
+          }
+          className="lg:col-span-8"
+        >
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -right-24 -top-32 h-80 w-80 rounded-full opacity-30 blur-3xl"
+            style={{ background: 'var(--accent-2)' }}
+          />
+          <div className="relative flex flex-wrap items-end justify-between gap-6">
+            <p className="font-display text-[88px] font-semibold leading-[0.95] tracking-[-0.04em] sm:text-[104px]">
+              {data ? <AnimatedNumber value={total} /> : <span className="block h-24 w-48 animate-pulse rounded-2xl bg-white/10" />}
+            </p>
+            <dl className="grid grid-cols-3 gap-8 pb-3">
+              {[
+                ['Decision makers', data?.decisionMakers ?? 0],
+                ['Emailed', data?.reached.emailed ?? 0],
+                ['Opted out', data?.optedOut ?? 0],
+              ].map(([label, value]) => (
+                <div key={label as string}>
+                  <dt className="text-[11.5px] text-on-ink-faint">{label}</dt>
+                  <dd className="font-display mt-1 text-[28px] font-semibold leading-none">
+                    <AnimatedNumber value={value as number} />
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+          <div className="relative mt-9">{data && <StageRibbon byStage={data.byStage} total={total} />}</div>
+        </Tile>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-5">
-        <Card
-          className="rise xl:col-span-3"
-          eyebrow="Conversion"
-          title="Pipeline funnel"
-          description="How many consultants reached each stage or went past it."
-          actions={
-            <Link href="/funnel" className="press inline-flex items-center gap-1 text-[12.5px] text-muted hover:text-fg">
-              Details <ArrowRight className="h-3.5 w-3.5" />
+        {/* ── The approval rate ── */}
+        <Tile
+          label="Approved for outreach"
+          aside={
+            <Link href="/consultants" className="press text-muted transition-colors duration-150 hover:text-ink" aria-label="Open consultants">
+              <ArrowUpRight className="h-4 w-4" />
             </Link>
           }
+          className="items-center justify-center lg:col-span-4"
         >
-          {data ? <FunnelBars reached={data.reached} total={total} /> : <ListSkeleton rows={7} />}
-        </Card>
-
-        <Card className="rise xl:col-span-2" eyebrow="Right now" title="Where everyone is" description="Current stage, including closed.">
-          {data ? <StageDonut byStage={data.byStage} total={total} /> : <Skeleton className="mx-auto h-48 w-48 rounded-full" />}
-        </Card>
-      </div>
-
-      <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <Card className="rise" eyebrow="Mix" title="Top technologies" flush>
-          <div className="px-5 pb-5">
-            {breakdowns.data ? (
-              <TopList rows={breakdowns.data.technology.slice(0, 6)} total={total} />
-            ) : (
-              <ListSkeleton rows={6} />
-            )}
-          </div>
-        </Card>
-
-        <Card className="rise" eyebrow="Newest" title="Recently added" flush>
           {data ? (
-            <ul className="divide-y divide-line border-t border-line">
-              {data.recent.map((person) => (
+            <RateRing
+              rate={total ? data.decisionMakers / total : 0}
+              caption={`${data.decisionMakers} of ${total} marked as decision makers`}
+            />
+          ) : (
+            <Skeleton className="h-[168px] w-[168px] rounded-full" />
+          )}
+        </Tile>
+
+        {/* ── What to do next ── */}
+        <Tile tone="soft" label="Next step" className="justify-between lg:col-span-4">
+          <p className="font-display text-[30px] font-semibold leading-[1.1] text-ink">
+            {data ? (
+              awaitingReview > 0 ? (
+                <>
+                  <AnimatedNumber value={awaitingReview} /> consultants are{' '}
+                  <em className="font-medium italic text-accent">waiting</em> for review.
+                </>
+              ) : (
+                <>
+                  Everyone has been <em className="font-medium italic text-accent">reviewed.</em>
+                </>
+              )
+            ) : (
+              <span className="block h-20 w-full animate-pulse rounded-xl bg-white/50" />
+            )}
+          </p>
+          <div className="mt-8">
+            <p className="mb-4 text-[13.5px] leading-relaxed text-muted">
+              Mark decision makers in Compass and bench-outreach emails them a matching role.
+            </p>
+            <Link href="/consultants" className={pillPrimary}>
+              Review consultants <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </Tile>
+
+        {/* ── The journey, station by station ── */}
+        <Tile
+          label="Journey"
+          aside={
+            <Link href="/funnel" className="press flex items-center gap-1 text-[12.5px] text-muted transition-colors duration-150 hover:text-ink">
+              Funnel <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          }
+          className="lg:col-span-8"
+        >
+          {data ? (
+            <>
+              <StageStepper reached={data.reached} total={total} />
+              <p className="mt-6 border-t border-line pt-5 text-[13.5px] text-muted">
+                {percent(data.reached.emailed ?? 0, total, 1)} of consultants have been emailed ·{' '}
+                {percent(data.reached.qualified ?? 0, total, 1)} have qualified. Percentages between stations show how many
+                continued from the stage before.
+              </p>
+            </>
+          ) : (
+            <Skeleton className="h-40 w-full" />
+          )}
+        </Tile>
+
+        {/* ── Details row: three smaller tiles of different widths ── */}
+        <Tile label="Top technologies" className="lg:col-span-5">
+          {breakdowns.data ? (
+            <ul className="space-y-4">
+              {breakdowns.data.technology.slice(0, 5).map((row, index) => {
+                const max = breakdowns.data!.technology[0]?.count || 1;
+                return (
+                  <li key={row.label}>
+                    <div className="mb-1.5 flex items-baseline justify-between gap-3">
+                      <span className="flex items-baseline gap-3">
+                        <span className="font-display w-5 text-[13px] text-faint">{String(index + 1).padStart(2, '0')}</span>
+                        <span className="text-[14px] font-medium text-ink">{row.label}</span>
+                      </span>
+                      <span className="text-[13px] tabular-nums text-muted">
+                        {row.count} <span className="text-faint">· {percent(row.count, total)}</span>
+                      </span>
+                    </div>
+                    <div className="ml-8 h-[3px] overflow-hidden rounded-full bg-surface-3">
+                      <div
+                        className="h-full origin-left rounded-full bg-accent transition-transform duration-[250ms] ease-out"
+                        style={{ transform: `scaleX(${row.count / max})` }}
+                      />
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <Skeleton className="h-48 w-full" />
+          )}
+        </Tile>
+
+        <Tile label="Newest" className="lg:col-span-4">
+          {data ? (
+            <ul className="-mx-2 space-y-1">
+              {data.recent.slice(0, 5).map((person) => (
                 <li key={person.id}>
-                  <button
-                    type="button"
-                    onClick={() => setSelected(person)}
-                    className="flex w-full items-center gap-3 px-5 py-3 text-left transition-colors duration-150 hover:bg-surface-2"
+                  <Link
+                    href={`/journey?id=${person.id}`}
+                    className="flex items-center gap-3 rounded-2xl px-2 py-2 transition-colors duration-150 hover:bg-surface-2"
                   >
-                    <Avatar name={person.name} size={30} />
+                    <Avatar name={person.name} size={34} />
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[13.5px] font-medium text-fg">{person.name}</span>
-                      <span className="block truncate text-[12px] text-faint">{person.technology ?? person.email}</span>
+                      <span className="block truncate text-[14px] font-medium text-ink">{person.name}</span>
+                      <span className="block truncate text-[12px] text-faint">
+                        {person.title ?? person.technology ?? person.email}
+                      </span>
                     </span>
-                    <StagePill stage={person.stage} />
-                  </button>
+                    <span className="flex flex-col items-end gap-1">
+                      <span className="h-2 w-2 rounded-full" style={{ background: STAGE_META[person.stage].color }} title={STAGE_META[person.stage].label} />
+                      <span className="text-[11px] tabular-nums text-faint">{relativeTime(person.createdAt)}</span>
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>
           ) : (
-            <div className="px-5 pb-5">
-              <ListSkeleton rows={6} />
-            </div>
+            <Skeleton className="h-48 w-full" />
           )}
-        </Card>
+        </Tile>
 
-        <Card className="rise" eyebrow="Live" title="Activity" flush>
-          <div className="border-t border-line">
+        <Tile label="Activity" className="lg:col-span-3">
+          <div className="-mx-7 -mb-7 flex-1">
             <ActivityFeed />
           </div>
-        </Card>
+        </Tile>
       </div>
-
-      <ConsultantSheet consultant={selected} onClose={() => setSelected(null)} />
     </>
-  );
-}
-
-function TopList({ rows, total }: { rows: { label: string; count: number }[]; total: number }) {
-  const max = Math.max(1, ...rows.map((row) => row.count));
-  return (
-    <ul className="space-y-3 border-t border-line pt-4">
-      {rows.map((row) => (
-        <li key={row.label}>
-          <div className="mb-1 flex justify-between gap-3 text-[13px]">
-            <span className="truncate text-fg">{row.label}</span>
-            <span className="shrink-0 tabular-nums text-muted">
-              {row.count} <span className="text-faint">{percent(row.count, total)}</span>
-            </span>
-          </div>
-          <div className="h-[3px] overflow-hidden rounded-full bg-surface-3">
-            <div
-              className="h-full origin-left rounded-full bg-accent transition-transform duration-[250ms] ease-out"
-              style={{ transform: `scaleX(${row.count / max})` }}
-            />
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function ListSkeleton({ rows }: { rows: number }) {
-  return (
-    <div className="space-y-3">
-      {Array.from({ length: rows }, (_, i) => (
-        <Skeleton key={i} className="h-7 w-full" />
-      ))}
-    </div>
   );
 }

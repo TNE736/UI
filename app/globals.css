@@ -174,6 +174,20 @@ body {
   animation: pulse-ring 1.8s var(--ease-out) infinite;
 }
 
+/* Stage ribbon: uncovered left to right once, like a line being drawn.
+ * Already on screen, so ease-in-out; plays on mount only. */
+@keyframes ribbon-reveal {
+  from {
+    clip-path: inset(0 100% 0 0 round 999px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 999px);
+  }
+}
+.ribbon-reveal {
+  animation: ribbon-reveal 600ms var(--ease-in-out) both;
+}
+
 /* ─────────────────────────── Home waves ───────────────────────────
  * Ambient, constant motion: linear, transform-only, very slow (60–95 s per
  * wave). Each layer is two wave periods wide and slides exactly one period,
@@ -217,7 +231,8 @@ body {
     transform: none;
   }
   .live-dot::after,
-  .wave-layer {
+  .wave-layer,
+  .ribbon-reveal {
     animation: none;
   }
 }
