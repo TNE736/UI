@@ -50,4 +50,4 @@ export function PageHeader({ title, accent, eyebrow, index, description, actions
 export const pillPrimary =
   'press inline-flex h-10 items-center gap-2 rounded-full bg-ink px-5 text-[13.5px] font-medium text-on-ink shadow-glow transition-[background-color] duration-150 ease-out hover:bg-ink-hover disabled:cursor-not-allowed disabled:opacity-45';
 export const pillSecondary =
-  'press inline-flex h-10 items-center gap-2 rounded-full border border-line-strong bg-white px-5 text-[13.5px] font-medium text-ink transition-[border-color] duration-150 ease-out hover:border-ink/40 disabled:cursor-not-allowed disabled:opacity-45';
+  'press inline-flex h-10 items-center gap-2 rounded-full border border-line-strong bg-surface px-5 text-[13.5px] font-medium text-ink transition-[border-color] duration-150 ease-out hover:border-ink/40 disabled:cursor-not-allowed disabled:opacity-45';

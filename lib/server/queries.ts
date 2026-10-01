@@ -119,6 +119,11 @@ export interface ListParams {
   q?: string;
   stage?: string;
   decisionMaker?: 'yes' | 'no';
+  /** Exact (case-insensitive) matches on profile fields. "Not set" matches empty values. */
+  technology?: string;
+  seniority?: string;
+  visaStatus?: string;
+  emailStatus?: string;
   sort?: string;
   dir?: 'asc' | 'desc';
   page?: number;
@@ -127,6 +132,13 @@ export interface ListParams {
 
 const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 export const MAX_PAGE_SIZE = 1000;
+/** The label /api/breakdowns uses for a missing or blank value. */
+export const NOT_SET = 'Not set';
+
+function exactly(value: string) {
+  if (value === NOT_SET) return { $in: [null, ''] };
+  return new RegExp(`^\\s*${escapeRegex(value)}\\s*$`, 'i');
+}
 
 export async function listConsultants(params: ListParams): Promise<ConsultantPage> {
   const filter: Filter<Document> = {};
@@ -143,6 +155,10 @@ export async function listConsultants(params: ListParams): Promise<ConsultantPag
       params.stage === 'loaded' ? { $in: ['loaded', null] } : params.stage;
   }
   if (params.decisionMaker) filter.decision_maker = params.decisionMaker === 'yes' ? true : { $ne: true };
+  if (params.technology) filter.technology = exactly(params.technology);
+  if (params.seniority) filter.seniority = exactly(params.seniority);
+  if (params.visaStatus) filter.visa_status = exactly(params.visaStatus);
+  if (params.emailStatus) filter.email_status = exactly(params.emailStatus);
 
   const sortField = SORTABLE[(params.sort as SortKey) ?? 'created'] ?? '_id';
   const direction = params.dir === 'asc' ? 1 : -1;

@@ -13,7 +13,7 @@ export function ChartTooltip({
   if (!active || !payload?.length) return null;
   return (
     <div className="rounded-xl border border-line-strong bg-surface px-3 py-2 text-[12.5px] shadow-pop">
-      {label !== undefined && label !== '' && <p className="mb-1 font-medium text-fg">{label}</p>}
+      {label !== undefined && label !== '' && <p className="mb-1 font-medium text-ink">{label}</p>}
       {payload.map((item, index) => (
         <p key={index} className="flex items-center gap-2 text-muted">
           <span
@@ -22,7 +22,7 @@ export function ChartTooltip({
             aria-hidden
           />
           {item.name}
-          <span className="ml-auto pl-3 font-semibold tabular-nums text-fg">{item.value}</span>
+          <span className="ml-auto pl-3 font-semibold tabular-nums text-ink">{item.value}</span>
         </p>
       ))}
     </div>

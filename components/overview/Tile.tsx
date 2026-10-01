@@ -26,7 +26,7 @@ export function Tile({ tone = 'plain', label, aside, className, children }: Tile
   return (
     <section
       className={cn(
-        'relative flex flex-col overflow-hidden rounded-[26px] p-7',
+        'relative flex flex-col overflow-hidden rounded-panel p-6 sm:p-7',
         'transition-shadow duration-200 ease-out',
         tone === 'plain' && 'hover:shadow-pop',
         TONES[tone],

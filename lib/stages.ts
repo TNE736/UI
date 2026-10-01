@@ -55,3 +55,28 @@ export function progressIndex(stage: Stage): number {
   const index = (PROGRESS_STAGES as readonly string[]).indexOf(stage);
   return index === -1 ? 0 : index;
 }
+
+/** What happens next for a consultant, from the LeadOps flow (no guessing beyond it). */
+export function nextStepFor(c: { stage: Stage; decisionMaker: boolean; optedOut: boolean }): string {
+  if (c.optedOut) return 'Opted out — no further outreach will be sent.';
+  switch (c.stage) {
+    case 'loaded':
+      return c.decisionMaker
+        ? 'Approved. bench-outreach’s Email Agent will send a matching role.'
+        : 'Waiting for approval. Set decision_maker to true in Compass to release them to outreach.';
+    case 'emailed':
+      return 'Emailed — waiting for a reply.';
+    case 'engaged':
+      return 'Replied — research is next.';
+    case 'researched':
+      return 'Researched — a qualifying follow-up is next.';
+    case 'followed_up':
+      return 'Followed up — waiting to qualify.';
+    case 'qualified':
+      return 'Qualified — ready to hand to the Bench TA team.';
+    case 'handed_off':
+      return 'With the Bench TA team.';
+    default:
+      return `Closed as ${STAGE_META[c.stage].label.toLowerCase()} — no further steps.`;
+  }
+}

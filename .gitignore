@@ -11,3 +11,14 @@ next-env.d.ts
 
 *.log
 .DS_Store
+
+# Python backend
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+build/
+
+# Log output (not the app/api/logs route)
+/logs/
+/backend/integrations/logs/
