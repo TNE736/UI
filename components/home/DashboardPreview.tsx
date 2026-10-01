@@ -12,6 +12,7 @@ import { BadgeCheck, MailCheck, Radio, Users } from "lucide-react";
 import type { Overview } from "@/lib/types";
 import { PROGRESS_STAGES, STAGE_META } from "@/lib/stages";
 import { percent } from "@/lib/format";
+import { useLive } from "@/lib/live";
 import { AnimatedNumber } from "@/components/ui/Number";
 import { Avatar } from "@/components/ui/Avatar";
 
@@ -33,6 +34,7 @@ const TILT_SPRING = { stiffness: 120, damping: 20, mass: 0.6 };
  */
 export function DashboardPreview({ data }: { data: Overview | null }) {
   const reduceMotion = useReducedMotion();
+  const { status, events } = useLive();
   const [canTilt, setCanTilt] = useState(false);
   const frame = useRef<HTMLDivElement>(null);
 
@@ -124,7 +126,7 @@ export function DashboardPreview({ data }: { data: Overview | null }) {
                 Pipeline funnel
               </p>
               <ul className="space-y-2">
-                {PROGRESS_STAGES.slice(0, 5).map((stage) => {
+                {PROGRESS_STAGES.slice(0, 6).map((stage, index) => {
                   const count = data?.reached[stage] ?? 0;
                   return (
                     <li
@@ -134,14 +136,21 @@ export function DashboardPreview({ data }: { data: Overview | null }) {
                       <span className="truncate text-muted">
                         {STAGE_META[stage].label}
                       </span>
-                      <span className="h-1.5 overflow-hidden rounded-full bg-surface-3">
+                      <span className="relative h-1.5 overflow-hidden rounded-full bg-surface-3">
                         <span
-                          className="block h-full origin-left rounded-full transition-transform duration-[250ms] ease-out"
+                          className="block h-full origin-left rounded-full transition-transform duration-500 ease-out"
                           style={{
                             background: STAGE_META[stage].color,
                             transform: `scaleX(${total ? Math.max(count / total, count ? 0.03 : 0) : 0})`,
                           }}
                         />
+                        {/* A soft light travels through stages that have people in them. */}
+                        {count > 0 && (
+                          <span
+                            className="bar-pulse absolute inset-y-0 left-0 w-1/3"
+                            style={{ animationDelay: `${index * 280}ms` }}
+                          />
+                        )}
                       </span>
                       <span className="text-right tabular-nums text-ink">
                         {count}
@@ -177,10 +186,14 @@ export function DashboardPreview({ data }: { data: Overview | null }) {
 
         {/* A small live chip floating over the top-right corner. */}
         <div className="absolute -right-4 -top-4 hidden items-center gap-2 rounded-full bg-ink px-3.5 py-1.5 text-[11px] font-medium text-on-ink shadow-glow sm:flex">
-          <span className="live-dot relative h-1.5 w-1.5 rounded-full bg-accent-2 text-accent-2" />
-          {data
-            ? `${percent(data.decisionMakers, total)} decision makers`
-            : "Live"}
+          <span
+            className={`relative h-1.5 w-1.5 rounded-full ${status === "live" ? "live-dot bg-accent-2 text-accent-2" : "bg-on-ink-faint"}`}
+          />
+          {status === "live"
+            ? `Live · ${events.length} event${events.length === 1 ? "" : "s"}`
+            : data
+              ? `${percent(data.decisionMakers, total)} decision makers`
+              : "Connecting"}
         </div>
       </motion.div>
     </div>

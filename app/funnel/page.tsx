@@ -1,21 +1,35 @@
 'use client';
 
-import { ArrowDown, Mail, TrendingDown, Trophy, UserCheck } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useState } from 'react';
+import { Mail, TrendingDown, Trophy, UserCheck } from 'lucide-react';
 import type { Overview } from '@/lib/types';
 import { useResource } from '@/lib/useResource';
-import { CLOSING_STAGES, PROGRESS_STAGES, STAGE_META } from '@/lib/stages';
-import { percent } from '@/lib/format';
+import { PROGRESS_STAGES, STAGE_META, type ProgressStage } from '@/lib/stages';
+import { cn, percent } from '@/lib/format';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { ErrorBanner } from '@/components/ui/States';
+import { ErrorState } from '@/components/ui/States';
 import { AnimatedNumber } from '@/components/ui/Number';
-import { StagePill } from '@/components/ui/StagePill';
+import { DataStamp } from '@/components/ui/DataStamp';
+import { EmailStatus } from '@/components/overview/EmailStatus';
+import { ClosedPaths } from '@/components/overview/ClosedPaths';
+
+interface Step {
+  stage: ProgressStage;
+  count: number;
+  previous: number;
+  dropped: number;
+}
+
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 
 export default function FunnelPage() {
-  const { data, error } = useResource<Overview>('/api/overview');
+  const { data, error, fetching, updatedAt, retry } = useResource<Overview>('/api/overview');
+  const [hover, setHover] = useState<ProgressStage | null>(null);
 
-  const steps = data
+  const steps: Step[] = data
     ? PROGRESS_STAGES.map((stage, index) => {
         const count = data.reached[stage] ?? 0;
         const previous = index === 0 ? data.total : (data.reached[PROGRESS_STAGES[index - 1]!] ?? 0);
@@ -23,11 +37,13 @@ export default function FunnelPage() {
       })
     : [];
   // Biggest leak between two consecutive stages (ignoring the first step, which is everyone).
-  const worst = steps.slice(1).reduce<(typeof steps)[number] | null>(
-    (worst, step) => (step.previous && (!worst || step.count / step.previous < worst.count / worst.previous) ? step : worst),
-    null
-  );
-  const closedTotal = data ? CLOSING_STAGES.reduce((sum, stage) => sum + data.byStage[stage], 0) : 0;
+  const worst = steps
+    .slice(1)
+    .reduce<Step | null>(
+      (w, step) => (step.previous && (!w || step.count / step.previous < w.count / w.previous) ? step : w),
+      null
+    );
+  const worstFrom = worst ? PROGRESS_STAGES[PROGRESS_STAGES.indexOf(worst.stage) - 1]! : null;
 
   return (
     <>
@@ -36,16 +52,19 @@ export default function FunnelPage() {
         eyebrow="Conversion"
         title="Where people"
         accent="drop off."
-        description="Each bar counts consultants who reached that stage or went further. Arrows show how many continued from the stage before."
-      />
+        description="Each band counts consultants who reached that stage or went further. The narrowing between bands is the drop-off."
+      >
+        <DataStamp updatedAt={updatedAt} fetching={fetching} onRefresh={retry} />
+      </PageHeader>
+
       {error && (
-        <div className="mb-4">
-          <ErrorBanner message={error} />
+        <div className="mb-5">
+          <ErrorState title={data ? 'Showing the last good data' : 'Couldn’t read the funnel'} message={error} onRetry={retry} />
         </div>
       )}
 
-      <div className="stagger mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Stat icon={UserCheck} label="Decision makers" value={data?.decisionMakers} hint={data && percent(data.decisionMakers, data.total)} />
+      <div className="stagger mb-5 grid grid-cols-2 gap-px overflow-hidden rounded-panel bg-line shadow-card xl:grid-cols-4">
+        <Stat icon={UserCheck} label="Approved" value={data?.decisionMakers} hint={data && `${percent(data.decisionMakers, data.total)} of everyone`} />
         <Stat icon={Mail} label="Emailed" value={data?.reached.emailed} hint={data && `${percent(data.reached.emailed ?? 0, data.total)} of everyone`} />
         <Stat
           icon={Trophy}
@@ -57,92 +76,118 @@ export default function FunnelPage() {
         <Stat
           icon={TrendingDown}
           label="Biggest drop-off"
-          text={worst ? `${STAGE_META[PROGRESS_STAGES[PROGRESS_STAGES.indexOf(worst.stage) - 1]!].label} → ${STAGE_META[worst.stage].label}` : data ? 'None yet' : undefined}
-          hint={worst ? `${percent(worst.count, worst.previous)} continued` : undefined}
+          text={worst && worstFrom ? `${STAGE_META[worstFrom].label} → ${STAGE_META[worst.stage].label}` : data ? 'None yet' : undefined}
+          hint={worst ? `${percent(worst.count, worst.previous)} continued · ${worst.dropped} stopped` : undefined}
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <Card className="rise xl:col-span-2" eyebrow="Pipeline" title="Stage by stage">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <Card className="rise" eyebrow="Pipeline" title="Stage by stage" description="Hover a band for its numbers.">
           {!data ? (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {PROGRESS_STAGES.map((stage) => (
-                <Skeleton key={stage} className="h-12 w-full" />
+                <Skeleton key={stage} className="mx-auto h-11 w-3/4" />
               ))}
             </div>
           ) : (
-            <ol className="flex flex-col items-center">
-              {steps.map(({ stage, count, previous, dropped }, index) => {
-                const { label, color, description } = STAGE_META[stage];
-                const share = data.total ? count / data.total : 0;
-                return (
-                  <li key={stage} className="w-full">
-                    {index > 0 && (
-                      <div className="flex items-center justify-center gap-2 py-1.5 text-[11.5px] text-faint">
-                        <ArrowDown className="h-3 w-3" />
-                        <span className="tabular-nums">{percent(count, previous, 1)} continued</span>
-                        {dropped > 0 && <span className="tabular-nums text-danger/80">· {dropped} stopped</span>}
-                      </div>
-                    )}
-                    <div className="grid grid-cols-[110px_1fr_90px] items-center gap-3 sm:grid-cols-[140px_1fr_110px]">
-                      <span className="text-[13px] font-medium text-fg" title={description}>
-                        {label}
-                      </span>
-                      <div className="relative h-11 overflow-hidden rounded-xl bg-surface-2">
-                        {/* Scaled from the centre so the shape reads as a funnel. */}
-                        <div
-                          className="absolute inset-y-0 left-0 right-0 origin-center rounded-xl transition-transform duration-[250ms] ease-out"
-                          style={{
-                            transform: `scaleX(${Math.max(share, count ? 0.02 : 0)})`,
-                            background: color,
-                          }}
-                        />
-                      </div>
-                      <span className="text-right tabular-nums">
-                        <span className="text-[15px] font-semibold text-fg">
-                          <AnimatedNumber value={count} />
-                        </span>
-                        <span className="ml-1.5 text-[12px] text-faint">{percent(count, data.total)}</span>
-                      </span>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
+            <Funnel steps={steps} total={data.total} hover={hover} onHover={setHover} />
           )}
         </Card>
 
-        <div className="space-y-4">
-          <Card className="rise" eyebrow="Closed early" title="Left the pipeline" description={data ? `${closedTotal} consultants` : undefined}>
-            <ul className="space-y-2.5">
-              {CLOSING_STAGES.map((stage) => (
-                <li key={stage} className="flex items-center justify-between gap-3">
-                  <StagePill stage={stage} />
-                  <span className="text-[13px] tabular-nums text-fg">{data ? data.byStage[stage] : '—'}</span>
-                </li>
-              ))}
-            </ul>
+        <div className="space-y-5">
+          <Card className="rise" eyebrow="Outreach" title="Email status" description="As written by the Email Agent.">
+            {data ? <EmailStatus emailStatus={data.emailStatus} /> : <Skeleton className="h-40 w-full" />}
           </Card>
-
-          <Card className="rise" eyebrow="Mailgun" title="Email status" description="From delivery and reply webhooks.">
-            {data && Object.keys(data.emailStatus).length ? (
-              <ul className="space-y-2.5">
-                {Object.entries(data.emailStatus)
-                  .sort((a, b) => b[1] - a[1])
-                  .map(([status, count]) => (
-                    <li key={status} className="flex items-center justify-between text-[13px]">
-                      <span className="text-muted">{status.charAt(0) + status.slice(1).toLowerCase()}</span>
-                      <span className="tabular-nums text-fg">{count}</span>
-                    </li>
-                  ))}
-              </ul>
-            ) : (
-              <p className="text-[13px] text-faint">No emails sent yet.</p>
-            )}
+          <Card className="rise" eyebrow="Closed early" title="Left the pipeline">
+            {data ? <ClosedPaths byStage={data.byStage} /> : <Skeleton className="h-40 w-full" />}
           </Card>
         </div>
       </div>
     </>
+  );
+}
+
+/**
+ * A real funnel: centred bands sized by share of everyone, joined by
+ * trapezoids whose narrowing *is* the drop-off. Widths retarget smoothly when
+ * the data changes (transform / path morph, 500 ms ease-out).
+ */
+function Funnel({
+  steps,
+  total,
+  hover,
+  onHover,
+}: {
+  steps: Step[];
+  total: number;
+  hover: ProgressStage | null;
+  onHover: (stage: ProgressStage | null) => void;
+}) {
+  const width = (count: number) => (total ? Math.max((count / total) * 100, count ? 3 : 0.6) : 0.6);
+
+  return (
+    <ol onMouseLeave={() => onHover(null)}>
+      {steps.map((step, index) => {
+        const { label, color, description } = STAGE_META[step.stage];
+        const w = width(step.count);
+        const next = steps[index + 1];
+        const dim = hover !== null && hover !== step.stage;
+        return (
+          <li key={step.stage}>
+            <div
+              className="grid grid-cols-[92px_1fr_76px] items-center gap-3 sm:grid-cols-[130px_1fr_120px]"
+              onMouseEnter={() => onHover(step.stage)}
+            >
+              <span className={cn('text-[13px] font-medium transition-colors duration-150', dim ? 'text-faint' : 'text-ink')} title={description}>
+                {label}
+              </span>
+              <div className="relative h-11">
+                <motion.div
+                  className="absolute inset-y-0 left-0 right-0 origin-center rounded-control"
+                  style={{ background: color }}
+                  initial={false}
+                  animate={{ scaleX: w / 100, opacity: dim ? 0.45 : 1 }}
+                  transition={{ duration: 0.5, ease: EASE_OUT }}
+                />
+              </div>
+              <span className="num text-right">
+                <span className="text-[16px] font-semibold text-ink">
+                  <AnimatedNumber value={step.count} />
+                </span>
+                <span className="ml-1.5 text-[12px] text-faint">{percent(step.count, total)}</span>
+              </span>
+            </div>
+
+            {next && (
+              <div className="grid grid-cols-[92px_1fr_76px] items-center gap-3 sm:grid-cols-[130px_1fr_120px]">
+                <span />
+                <div className="relative h-9">
+                  <svg viewBox="0 0 100 36" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" aria-hidden>
+                    <motion.path
+                      initial={false}
+                      animate={{
+                        d: `M ${50 - w / 2} 0 L ${50 + w / 2} 0 L ${50 + width(next.count) / 2} 36 L ${50 - width(next.count) / 2} 36 Z`,
+                      }}
+                      transition={{ duration: 0.5, ease: EASE_OUT }}
+                      fill={STAGE_META[next.stage].color}
+                      opacity={0.28}
+                    />
+                  </svg>
+                  <span className="absolute inset-0 grid place-items-center">
+                    <span className="num rounded-full bg-surface px-2.5 py-0.5 text-[11.5px] font-medium text-muted shadow-card">
+                      {step.count ? percent(next.count, step.count, 1) : '—'} continued
+                    </span>
+                  </span>
+                </div>
+                <span className={cn('num text-right text-[11.5px]', step.count - next.count > 0 ? 'text-danger' : 'text-faint')}>
+                  {step.count - next.count > 0 ? `−${step.count - next.count}` : step.count ? '0 lost' : '—'}
+                </span>
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
@@ -163,15 +208,21 @@ function Stat({
 }) {
   const ready = value !== undefined || text !== undefined;
   return (
-    <div className="rounded-[22px] bg-surface p-6 shadow-card">
-      <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
+    <div className="bg-surface p-5 sm:p-6">
+      <p className="t-label flex items-center gap-2">
         <Icon className="h-4 w-4 text-accent" />
         {label}
       </p>
-      <div className="font-display mt-4 min-h-10 text-[36px] font-semibold leading-none text-ink">
-        {!ready ? <Skeleton className="h-8 w-24" /> : text !== undefined ? <span className="text-[21px]">{text}</span> : <AnimatedNumber value={value!} suffix={suffix} />}
+      <div className="t-figure mt-4 min-h-9 text-[34px] text-ink">
+        {!ready ? (
+          <Skeleton className="h-8 w-24" />
+        ) : text !== undefined ? (
+          <span className="font-display text-[19px] font-semibold leading-tight tracking-normal">{text}</span>
+        ) : (
+          <AnimatedNumber value={value!} suffix={suffix} />
+        )}
       </div>
-      <p className="mt-1 h-4 text-[12px] text-faint">{hint || ''}</p>
+      <p className="mt-1.5 min-h-4 text-[12px] text-faint">{hint || ''}</p>
     </div>
   );
 }

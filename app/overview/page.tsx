@@ -8,7 +8,8 @@ import { useLive } from '@/lib/live';
 import { percent, relativeTime } from '@/lib/format';
 import { STAGE_META } from '@/lib/stages';
 import { PageHeader, pillPrimary } from '@/components/ui/PageHeader';
-import { ErrorBanner } from '@/components/ui/States';
+import { ErrorState } from '@/components/ui/States';
+import { DataStamp } from '@/components/ui/DataStamp';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Avatar } from '@/components/ui/Avatar';
 import { AnimatedNumber } from '@/components/ui/Number';
@@ -17,6 +18,8 @@ import { Tile } from '@/components/overview/Tile';
 import { StageRibbon } from '@/components/overview/StageRibbon';
 import { RateRing } from '@/components/overview/RateRing';
 import { StageStepper } from '@/components/overview/StageStepper';
+import { EmailStatus } from '@/components/overview/EmailStatus';
+import { ClosedPaths } from '@/components/overview/ClosedPaths';
 
 /**
  * Bento layout, 12 columns. One hero tile carries the headline figure; the
@@ -38,17 +41,31 @@ export default function OverviewPage() {
         eyebrow="Live pipeline"
         title="Pipeline"
         accent="overview."
-        description={data ? `Updated ${relativeTime(data.generatedAt)} · refreshes live` : 'Reading MongoDB…'}
+        description="Where every consultant stands, what needs a decision, and what the agents have done."
         actions={
           <Link href="/upload" className={pillPrimary}>
             <UploadCloud className="h-4 w-4" /> Upload CSV
           </Link>
         }
-      />
+      >
+        <DataStamp
+          updatedAt={overview.updatedAt}
+          fetching={overview.fetching || breakdowns.fetching}
+          onRefresh={() => {
+            overview.retry();
+            breakdowns.retry();
+          }}
+          source={data ? `MongoDB · ${total.toLocaleString()} records` : 'MongoDB'}
+        />
+      </PageHeader>
 
       {overview.error && (
         <div className="mb-6">
-          <ErrorBanner message={overview.error} />
+          <ErrorState
+            title={data ? 'Showing the last good data' : 'Couldn’t read the pipeline'}
+            message={overview.error}
+            onRetry={overview.retry}
+          />
         </div>
       )}
 
@@ -72,7 +89,7 @@ export default function OverviewPage() {
           />
           <div className="relative flex flex-wrap items-end justify-between gap-6">
             <p className="font-display text-[88px] font-semibold leading-[0.95] tracking-[-0.04em] sm:text-[104px]">
-              {data ? <AnimatedNumber value={total} /> : <span className="block h-24 w-48 animate-pulse rounded-2xl bg-white/10" />}
+              {data ? <AnimatedNumber value={total} /> : <span className="block h-24 w-48 animate-pulse rounded-2xl bg-white/10 motion-reduce:animate-none" />}
             </p>
             <dl className="grid grid-cols-3 gap-8 pb-3">
               {[
@@ -127,7 +144,7 @@ export default function OverviewPage() {
                 </>
               )
             ) : (
-              <span className="block h-20 w-full animate-pulse rounded-xl bg-white/50" />
+              <span className="block h-20 w-full animate-pulse rounded-xl bg-white/50 motion-reduce:animate-none" />
             )}
           </p>
           <div className="mt-8">
@@ -165,7 +182,7 @@ export default function OverviewPage() {
         </Tile>
 
         {/* ── Details row: three smaller tiles of different widths ── */}
-        <Tile label="Top technologies" className="lg:col-span-5">
+        <Tile label="Top technologies" className="lg:col-span-7">
           {breakdowns.data ? (
             <ul className="space-y-4">
               {breakdowns.data.technology.slice(0, 5).map((row, index) => {
@@ -196,7 +213,7 @@ export default function OverviewPage() {
           )}
         </Tile>
 
-        <Tile label="Newest" className="lg:col-span-4">
+        <Tile label="Newest" className="lg:col-span-5">
           {data ? (
             <ul className="-mx-2 space-y-1">
               {data.recent.slice(0, 5).map((person) => (
@@ -225,9 +242,18 @@ export default function OverviewPage() {
           )}
         </Tile>
 
-        <Tile label="Activity" className="lg:col-span-3">
-          <div className="-mx-7 -mb-7 flex-1">
-            <ActivityFeed />
+        {/* ── Outcomes row: what the agents wrote, who left, what's live ── */}
+        <Tile label="Email status" className="lg:col-span-4">
+          {data ? <EmailStatus emailStatus={data.emailStatus} /> : <Skeleton className="h-48 w-full" />}
+        </Tile>
+
+        <Tile label="Closed paths" className="lg:col-span-3">
+          {data ? <ClosedPaths byStage={data.byStage} /> : <Skeleton className="h-48 w-full" />}
+        </Tile>
+
+        <Tile label="Live activity" className="lg:col-span-5">
+          <div className="-mx-6 -mb-6 flex-1 sm:-mx-7 sm:-mb-7">
+            <ActivityFeed className="max-h-[320px] pb-3" />
           </div>
         </Tile>
       </div>

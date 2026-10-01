@@ -1,43 +1,57 @@
 @import 'tailwindcss';
 
-/* ─────────────────────────── Tokens ───────────────────────────
- * Forest and linen: linen canvas, forest ink, ONE accent (forest green).
- * Colour is used sparingly — structure comes from type, space and hairlines.
- * Components only ever use the Tailwind names mapped below.               */
+/* ═══════════════════════════ LeadOps design tokens ═══════════════════════════
+ * Forest and linen. Structure comes from type, space and hairlines; colour is
+ * reserved for state and hierarchy. Components only use the Tailwind names
+ * mapped in @theme below — never raw values.                                   */
 :root {
-  --bg: #f6f7f2;
-  --surface: #ffffff;
-  --surface-2: #f0f2ea;
-  --surface-3: #e3e8dc;
+  /* Surfaces, lowest → highest. */
+  --bg: #f4f5ef; /* page canvas */
+  --surface-sunken: #eceee6; /* wells, tracks, table headers */
+  --surface: #ffffff; /* primary surface: panels */
+  --surface-2: #f3f5ee; /* secondary surface: rows, inputs, hovers */
+  --surface-3: #e3e8dc; /* tertiary: bars' empty track, skeletons */
+  --surface-raised: #ffffff; /* elevated: popovers, sheets, command menu */
+
   --line: rgb(21 32 26 / 0.08);
   --line-strong: rgb(21 32 26 / 0.14);
+
+  /* Ink (text and dark surfaces). */
   --ink: #15201a;
+  --ink-2: #1c2a22; /* a step lighter, for layered dark panels */
   --ink-hover: #243229;
   --fg: #15201a;
   --muted: #56605a;
-  --faint: #929b93;
+  --faint: #8e978f;
 
   --accent: #2f6b4f;
   --accent-2: #86a98f;
   --accent-soft: rgb(47 107 79 / 0.09);
   --on-accent: #f1f5ee;
 
-  /* Text on ink surfaces (pills, active nav, the featured card). */
+  /* Text on ink surfaces. */
   --on-ink: #f1f5ee;
   --on-ink-muted: #cbd6cc;
-  --on-ink-faint: #a3b0a6;
+  --on-ink-faint: #9aa89e;
 
-  --sidebar: rgb(239 242 233 / 0.8);
-  --topbar: rgb(246 247 242 / 0.8);
+  --topbar: rgb(244 245 239 / 0.82);
   --chart-muted: #d3dccf;
 
-  --success: #3f7d4f;
-  --warning: #a86d12;
+  /* Status: text colour + a soft tint for badges and banners. */
+  --success: #2f7a4f;
+  --success-soft: rgb(47 122 79 / 0.1);
+  --warning: #9a6410;
+  --warning-soft: rgb(196 138 32 / 0.13);
   --danger: #b42318;
-  --info: #3f6c8f;
+  --danger-soft: rgb(180 35 24 / 0.08);
+  --info: #3a6a8c;
+  --info-soft: rgb(58 106 140 / 0.1);
 
-  --shadow-card: 0 0 0 1px rgb(21 32 26 / 0.07) inset, 0 1px 2px rgb(21 32 26 / 0.03), 0 12px 32px -20px rgb(30 60 40 / 0.2);
-  --shadow-pop: 0 0 0 1px rgb(21 32 26 / 0.08), 0 24px 60px -24px rgb(25 50 35 / 0.35);
+  /* Depth: a hairline ring plus one soft, forest-tinted drop. */
+  --shadow-card: 0 0 0 1px rgb(21 32 26 / 0.06) inset, 0 1px 2px rgb(21 32 26 / 0.03),
+    0 14px 34px -22px rgb(30 60 40 / 0.22);
+  --shadow-pop: 0 0 0 1px rgb(21 32 26 / 0.08), 0 28px 64px -28px rgb(25 50 35 / 0.38),
+    0 4px 12px -6px rgb(25 50 35 / 0.12);
   --glow: 0 10px 24px -12px rgb(21 32 26 / 0.45);
 }
 
@@ -47,17 +61,19 @@
   --font-mono: ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
   --color-bg: var(--bg);
+  --color-surface-sunken: var(--surface-sunken);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-surface-3: var(--surface-3);
+  --color-surface-raised: var(--surface-raised);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
   --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
   --color-ink-hover: var(--ink-hover);
   --color-on-ink: var(--on-ink);
   --color-on-ink-muted: var(--on-ink-muted);
   --color-on-ink-faint: var(--on-ink-faint);
-  --color-sidebar: var(--sidebar);
   --color-topbar: var(--topbar);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
@@ -67,13 +83,23 @@
   --color-accent-soft: var(--accent-soft);
   --color-on-accent: var(--on-accent);
   --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
   --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
 
   --shadow-card: var(--shadow-card);
   --shadow-pop: var(--shadow-pop);
   --shadow-glow: var(--glow);
+
+  /* Radius scale: controls < fields < panels < hero surfaces. */
+  --radius-control: 10px;
+  --radius-field: 12px;
+  --radius-panel: 20px;
+  --radius-hero: 28px;
 
   /* Emil Kowalski's curves — built-in CSS easings are too weak for UI. */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -81,78 +107,126 @@
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* ─────────────────────────── Base ─────────────────────────── */
+/* ═══════════════════════════ Base ═══════════════════════════ */
 html {
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
 }
 
 body {
-  /* A single soft sage glow at the top, nothing more. */
   background:
-    radial-gradient(1200px 420px at 50% -120px, rgb(134 169 143 / 0.22), transparent 70%),
+    radial-gradient(1200px 440px at 50% -140px, rgb(134 169 143 / 0.2), transparent 70%),
     var(--bg);
-  background-attachment: fixed;
   color: var(--fg);
   -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'cv11';
+}
+
+/* Paper grain: a static, near-invisible texture so large surfaces don't read flat. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 ::selection {
   background: var(--accent-soft);
 }
 
-/* Display headlines: Fraunces, tight tracking, optical sizing. */
-.font-display {
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  letter-spacing: -0.025em;
+/* One focus ring everywhere, visible only for keyboard users. */
+/* In the base layer so a component's own focus style (outline-none + ring) can replace it. */
+@layer base {
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
 }
 
-/* Small uppercase label with a hairline rule, used above sections. */
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--accent);
+/* ═══════════════════════════ Type scale ═══════════════════════════ */
+/* In the components layer so utilities (text-*, tracking-*) can override them. */
+@layer components {
+  /* Display headlines: Fraunces, tight tracking, optical sizing. */
+  .font-display {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    letter-spacing: -0.025em;
+  }
+  /* Big figures: display serif, tabular, a touch tighter. */
+  .t-figure {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    font-variant-numeric: tabular-nums lining-nums;
+    line-height: 1;
+  }
+  /* Tabular numbers in UI text. */
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Micro-label: small uppercase metadata. */
+  .t-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Section eyebrow with a hairline rule. */
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
 }
 
-/* ─────────────────────────── Motion utilities ───────────────────────────
- * Rules from the skills: transform/opacity only, ease-out, < 300 ms,
- * press feedback on :active, never scale(0), reduced motion = gentler.    */
+/* ═══════════════════════════ Motion ═══════════════════════════
+ * Rules from the skills: transform/opacity only, ease-out, < 300 ms for UI,
+ * press feedback on :active, never scale(0), reduced motion = gentler.     */
 
 /* Press feedback for anything pressable (100–160 ms, subtle scale). */
 .press {
-  transition: transform 160ms var(--ease-out);
+  /* Unlayered, so it wins over transition-* utilities: cover their properties too. */
+  transition-property: transform, color, background-color, border-color, box-shadow, opacity;
+  transition-duration: 160ms;
+  transition-timing-function: var(--ease-out);
 }
 .press:active:not(:disabled) {
   transform: scale(0.97);
 }
 
-/* One-time entrance for page content. Keyframes are fine here: it plays once
- * on mount and is never re-triggered rapidly. */
+/* One-time entrance for page content (never re-triggered rapidly). */
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
 }
 .rise {
-  animation: rise 280ms var(--ease-out) both;
+  animation: rise 320ms var(--ease-out) both;
 }
 
-/* Stagger children (30–80 ms apart), decorative only — never blocks input. */
+/* Stagger children 40 ms apart — decorative only, never blocks input. */
 .stagger > * {
-  animation: rise 280ms var(--ease-out) both;
+  animation: rise 320ms var(--ease-out) both;
 }
 .stagger > *:nth-child(2) { animation-delay: 40ms; }
 .stagger > *:nth-child(3) { animation-delay: 80ms; }
 .stagger > *:nth-child(4) { animation-delay: 120ms; }
 .stagger > *:nth-child(5) { animation-delay: 160ms; }
 .stagger > *:nth-child(6) { animation-delay: 200ms; }
+.stagger > *:nth-child(7) { animation-delay: 240ms; }
+.stagger > *:nth-child(8) { animation-delay: 280ms; }
 
 /* A live dot that breathes. Occasional, ambient, low amplitude. */
 @keyframes pulse-ring {
@@ -174,8 +248,7 @@ body {
   animation: pulse-ring 1.8s var(--ease-out) infinite;
 }
 
-/* Stage ribbon: uncovered left to right once, like a line being drawn.
- * Already on screen, so ease-in-out; plays on mount only. */
+/* Something already on screen being uncovered, left to right, once. */
 @keyframes ribbon-reveal {
   from {
     clip-path: inset(0 100% 0 0 round 999px);
@@ -188,10 +261,70 @@ body {
   animation: ribbon-reveal 600ms var(--ease-in-out) both;
 }
 
-/* ─────────────────────────── Home waves ───────────────────────────
+/* Skeletons: a very soft sheen, slow enough not to pull the eye. */
+@keyframes sheen {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-3);
+  opacity: 0.7;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.55), transparent);
+  animation: sheen 1.6s ease-in-out infinite;
+}
+
+/* Indeterminate progress: a short bar sliding across its track. */
+@keyframes indeterminate {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+.progress-indeterminate {
+  animation: indeterminate 1.3s var(--ease-in-out) infinite;
+}
+
+/* Home pipeline: dashes travelling along the connectors (Home only, ambient). */
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+.flow-dash {
+  stroke-dasharray: 4 8;
+  animation: flow-dash 1.6s linear infinite;
+}
+
+/* A soft band of light sweeping a bar left→right: "people are moving". */
+@keyframes bar-pulse {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(320%);
+  }
+}
+.bar-pulse {
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.75), transparent);
+  animation: bar-pulse 2.8s var(--ease-in-out) infinite;
+}
+
+/* ═══════════════════════════ Home waves ═══════════════════════════
  * Ambient, constant motion: linear, transform-only, very slow (60–95 s per
- * wave). Each layer is two wave periods wide and slides exactly one period,
- * so the loop is seamless. Removed entirely for reduced motion. */
+ * wave). Each layer is two wave periods wide and slides exactly one period. */
 .wave-layer {
   position: absolute;
   top: 0;
@@ -215,6 +348,12 @@ body {
   }
 }
 
+/* Faint dotted field behind data-flow graphics. */
+.flow-grid {
+  background-image: radial-gradient(rgb(21 32 26 / 0.09) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
 /* Scrollbars that don't shout. */
 .thin-scroll {
   scrollbar-width: thin;
@@ -232,8 +371,14 @@ body {
   }
   .live-dot::after,
   .wave-layer,
-  .ribbon-reveal {
+  .ribbon-reveal,
+  .bar-pulse,
+  .skeleton::after,
+  .flow-dash {
     animation: none;
+  }
+  .progress-indeterminate {
+    animation-duration: 3s;
   }
 }
 @keyframes fade {
@@ -242,20 +387,36 @@ body {
   }
 }
 
-/* ─────────────────────────── Command menu (cmdk) ─────────────────────────── */
+/* ═══════════════════════════ Command menu (cmdk) ═══════════════════════════ */
+/* Opens with a 140 ms fade + slight scale from its top edge; closes instantly. */
+@keyframes cmd-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+.cmd-content {
+  transform-origin: top center;
+  animation: cmd-in 140ms var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cmd-content {
+    animation: none;
+  }
+}
 .cmd-group [cmdk-group-heading] {
-  padding: 8px 10px 4px;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  padding: 10px 12px 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--faint);
 }
 .cmd-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 10px;
+  gap: 12px;
+  padding: 9px 12px;
   border-radius: 10px;
   color: var(--fg);
   cursor: pointer;
@@ -263,5 +424,6 @@ body {
 }
 /* Keyboard selection moves instantly — no transition on a 100+/day action. */
 .cmd-item[data-selected='true'] {
-  background: var(--accent-soft);
+  background: var(--surface-2);
+  box-shadow: inset 2px 0 0 var(--accent);
 }

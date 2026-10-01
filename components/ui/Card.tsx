@@ -14,7 +14,7 @@ export function Card({ title, eyebrow, description, actions, flush, className, c
   const hasHeader = title || eyebrow || description || actions;
   return (
     <section
-      className={cn('relative rounded-[22px] bg-surface shadow-card', className)}
+      className={cn('relative rounded-panel bg-surface shadow-card', className)}
       {...rest}
     >
       {hasHeader && (
